@@ -4,6 +4,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
+from datetime import datetime
 
 app = Flask(__name__)
 db = SQLAlchemy()
@@ -19,7 +20,7 @@ class User(db.Model):
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
-    joined_at = db.Column(db.String, nullable=False) # later db.DateTime
+    registration_date = db.Column(db.DateTime, nullable=False)
 
     # sheets - a list of Sheet objects
 
@@ -30,7 +31,7 @@ class User(db.Model):
     # api_credentials = db.relationship("ApiCredentials", backref="user", uselist=False)
 
     def __repr__(self):
-        return f'<User id={self.id} username={self.username} api_credentials_id={self.api_credentials_id}>'
+        return f'<User id={self.id} username={self.username} api_credentials_id={self.api_credentials_id} registration_date={self.registration_date}>'
 
 
 class Sheet(db.Model):
@@ -41,7 +42,7 @@ class Sheet(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    google_spreadsheet_id = db.Column(db.String, nullable=False)    
+    google_spreadsheet_id = db.Column(db.String, nullable=False)
     num_rows = db.Column(db.Integer, nullable=False)
     num_columns = db.Column(db.Integer, nullable=False)
 
