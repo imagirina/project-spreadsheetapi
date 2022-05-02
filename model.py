@@ -3,6 +3,7 @@
 # from flask import render_template, request, session, redirect, flash
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import backref
 
 app = Flask(__name__)
 db = SQLAlchemy()
@@ -12,7 +13,7 @@ class User(db.Model):
 
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
     api_credentials_id = db.Column(db.Integer, db.ForeignKey('api_credentials.id'))
     username = db.Column(db.String, nullable=False)
@@ -21,6 +22,12 @@ class User(db.Model):
     joined_at = db.Column(db.String, nullable=False) # later db.DateTime
 
     # sheets - a list of Sheet objects
+
+    # In order to establish one-to-one relationship we need to set up the uselist=False
+    # When we load ApiCredentials object, the ApiCredentials.user attribute will refer to a single User object rather than a collection    
+    
+    api_credentials = db.relationship("ApiCredentials", backref=backref("user", uselist=False))
+    # api_credentials = db.relationship("ApiCredentials", backref="user", uselist=False)
 
     def __repr__(self):
         return f'<User id={self.id} username={self.username} api_credentials_id={self.api_credentials_id}>'
@@ -31,7 +38,7 @@ class Sheet(db.Model):
 
     __tablename__ = 'sheets'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     google_spreadsheet_id = db.Column(db.String, nullable=False)    
@@ -49,7 +56,7 @@ class ApiCredentials(db.Model):
 
     __tablename__ = 'api_credentials'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     token = db.Column(db.String, nullable=False)
     refresh_token = db.Column(db.String, nullable=False)
