@@ -35,28 +35,20 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/signup', methods=["GET"])
-def show_signup():
-    """Show signup form"""
-    
-    return render_template('signup.html')
-
-
-
-@app.route('/signup', methods=["POST"])
+@app.route('/signup', methods=['GET', 'POST'])
 def register_user():
     """Process user signup, creating a new user"""
 
-    email = request.form.get("email")
-    password = request.form.get("password")
-    repeated_password = request.form.get("repeated_password")
-    
-    if password != repeated_password:
-        flash("The password you entered was incorrect")
-        return render_template('signup.html')
-    else:         
+    if request.method == 'POST':
+        email = request.form.get("email")
+        password = request.form.get("password")
+        repeated_password = request.form.get("repeated_password")
+        
+        if password != repeated_password:
+            flash("The password you entered was incorrect")
+            return render_template('signup.html')         
+            
         user = get_user_by_email(email)
-
         if user:
             flash("Account with that email already exists")
             return render_template('signup.html')
@@ -64,11 +56,11 @@ def register_user():
             user = create_user(email, password, registration_date=datetime.now())
             db.session.add(user)
             db.session.commit()
-            flash("Account created! Please log in")
-
-            session["email"] = user.email
+            flash("Account created! Please log in")            
 
         return redirect(url_for('index'))
+
+    return render_template('signup.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -84,7 +76,7 @@ def login():
             flash("The email or password you've entered was incorrect")
             return redirect(url_for('login'))
         else:            
-            session["email"] = user.email
+            session["email"] = user.email            
             flash(f"Welcome to the Dashboard, {user.email}!")
             return redirect(url_for('dashboard'))
     return render_template('login.html')
@@ -92,8 +84,9 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    
-    return render_template('dashboard.html')
+    if 'email' in session:    
+        return render_template('dashboard.html')
+    return redirect(url_for('index'))
 
 
 @app.route('/logout')
