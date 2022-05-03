@@ -1,5 +1,4 @@
 from os import urandom
-# from click import password_option
 from flask import Flask, render_template, request, session, redirect, flash, url_for
 from model import connect_to_db, db, User
 from datetime import datetime
@@ -7,12 +6,11 @@ from datetime import datetime
 app = Flask(__name__)
 
 # A secret key is needed to use Flask sessioning features
-# app.secret_key = "dev"
 SECRET_KEY = urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
 # This configuration option makes the Flask interactive debugger
-# more useful (you should remove this line in production though)
+# more useful (remove in production)
 app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True
 
 
