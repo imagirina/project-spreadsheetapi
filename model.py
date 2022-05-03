@@ -1,12 +1,12 @@
 """ Models for DB spreadsheetapi """
 
 # from flask import render_template, request, session, redirect, flash
-from flask import Flask
+# from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
-from datetime import datetime
+# from datetime import datetime
 
-app = Flask(__name__)
+
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -17,7 +17,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
     api_credentials_id = db.Column(db.Integer, db.ForeignKey('api_credentials.id'))
-    username = db.Column(db.String, nullable=False)
+    # username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
     registration_date = db.Column(db.DateTime, nullable=False)
@@ -31,7 +31,7 @@ class User(db.Model):
     # api_credentials = db.relationship("ApiCredentials", backref="user", uselist=False)
 
     def __repr__(self):
-        return f'<User id={self.id} username={self.username} api_credentials_id={self.api_credentials_id} registration_date={self.registration_date}>'
+        return f'<User id={self.id} api_credentials_id={self.api_credentials_id} registration_date={self.registration_date}>'
 
 
 class Sheet(db.Model):
@@ -71,24 +71,26 @@ class ApiCredentials(db.Model):
 
 
 def init_app():
-
     # If the output gets annoying => call connect_to_db(app, echo=False)
+
     connect_to_db(app, echo=True)
     print("Connected to DB <spreadsheetapi>!")
+    
 
-
-def connect_to_db(app, echo=True):
+def connect_to_db(flask_app, echo=True):
     """Connect the database to our Flask app."""
     
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///spreadsheetapi'
-    app.config['SQLALCHEMY_ECHO'] = echo
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    flask_app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///spreadsheetapi'
+    flask_app.config['SQLALCHEMY_ECHO'] = echo
+    flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    db.app = app
-    db.init_app(app)
-    # app.run(host="0.0.0.0", debug=True)
+    db.app = flask_app
+    db.init_app(flask_app)
+    
 
 
 if __name__ == "__main__":
+    from server import app
     
-    init_app()
+    # init_app()
+    connect_to_db(app)
