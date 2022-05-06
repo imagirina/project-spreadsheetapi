@@ -7,15 +7,60 @@
 }
 
 #flashed_messages {
-    list-style: none;
-    text-align: center;
-}
-
-#flashed_messages li {
     background-color: lightgoldenrodyellow;
-    padding: 10px 0;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 0.85em;
 }
 
 .navbar>.container-fluid {
     padding-left: 0;
+}
+
+h6 {
+    margin: 8px 0;
+}
+
+.badge.badge-info.mr-1 {
+    background-color: #20c997;
+    margin-right: 8px;
+}
+
+.btn-primary, .btn-outline-success:hover {
+    color: #fff;
+    background-color: #20c997;
+    border-color: #20c997;
+}
+
+.btn-outline-success {
+    border-color: #20c997;
+    color: #20c997;
+}
+.btn-primary:hover {
+    background-color: #00B779;
+    border-color: #00B779;
+}
+
+a {
+    color: #20c998;
+    text-decoration: underline;
+}
+a:hover {
+    color: #00B779;
+}
+
+.card-body pre {
+    margin-bottom: 0;    
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #38ffbb;
+    border-top-color: rgb(56, 255, 187);
+    border-right-color: rgb(56, 255, 187);
+    border-bottom-color: rgb(56, 255, 187);
+    border-left-color: rgb(56, 255, 187);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgb(0 183 121 / 25%);
 }

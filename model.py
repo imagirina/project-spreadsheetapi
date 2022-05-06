@@ -1,10 +1,7 @@
 """ Models for DB spreadsheetapi """
 
-# from flask import render_template, request, session, redirect, flash
-# from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
-# from datetime import datetime
 
 
 db = SQLAlchemy()
@@ -17,7 +14,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
     api_credentials_id = db.Column(db.Integer, db.ForeignKey('api_credentials.id'))
-    # username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
     registration_date = db.Column(db.DateTime, nullable=False)
@@ -26,9 +22,9 @@ class User(db.Model):
 
     # In order to establish one-to-one relationship we need to set up the uselist=False
     # When we load ApiCredentials object, the ApiCredentials.user attribute will refer to a single User object rather than a collection    
-    
     api_credentials = db.relationship("ApiCredentials", backref=backref("user", uselist=False))
     # api_credentials = db.relationship("ApiCredentials", backref="user", uselist=False)
+
 
     def __repr__(self):
         return f'<User id={self.id} api_credentials_id={self.api_credentials_id} registration_date={self.registration_date}>'
@@ -42,7 +38,8 @@ class Sheet(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    google_spreadsheet_id = db.Column(db.String, nullable=False)
+    google_spreadsheet_id = db.Column(db.String, nullable=False, unique=True)
+    sheet_name = db.Column(db.String, nullable=False)
     num_rows = db.Column(db.Integer, nullable=False)
     num_columns = db.Column(db.Integer, nullable=False)
 

@@ -1,38 +1,40 @@
+# This is a module from Python’s standard library. It contains code related to working with your computer’s operating system.
+import os
+import os.path
 from os import urandom
 from flask import Flask, render_template, request, session, redirect, flash, url_for
-from model import connect_to_db, db, User
+from flask.json import jsonify
+from model import connect_to_db, db
 from datetime import datetime
+from crud import create_user, create_credentials, get_user_by_email, create_new_sheet, get_sheets_by_user, get_sheet_by_id
+# from sqlalchemy.exc import SQLAlchemyError
+import sqlalchemy
+
+# Authentication and authorization for Google API (verifying identity and access to resources)
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
 
 app = Flask(__name__)
 
-# A secret key is needed to use Flask sessioning features
-SECRET_KEY = urandom(32)
-app.config['SECRET_KEY'] = SECRET_KEY
-
-# This configuration option makes the Flask interactive debugger
-# more useful (remove in production)
-app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1" # need this for http://localhost:5000 oAuth
+DEV_CREDENTIALS = os.environ['DEV_CREDENTIALS']
+SCOPES = [os.environ['SCOPE']]
+app.secret_key = os.environ['FLASK_SESSION_KEY']
+app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True # remove in production (this configuration option makes the Flask interactive debugger)
 
 
-def create_user(email, password, registration_date):
-    """Create and return a new user."""
-
-    user = User(email=email, password=password, registration_date=registration_date)    
-
-    return user
-
-
-def get_user_by_email(email):
-    """Return a user by email."""
-
-    return User.query.filter(User.email == email).first()
-
-
+# INDEX
 @app.route('/')
-def index():
+def index():    
+    # check if user is logged in and if logged in render the dashboard
+    if 'email' in session:
+        return redirect(url_for('dashboard'))
+
     return render_template('index.html')
 
 
+# SIGNUP
 @app.route('/signup', methods=['GET', 'POST'])
 def register_user():
     """Process user signup, creating a new user"""
@@ -54,6 +56,7 @@ def register_user():
             user = create_user(email, password, registration_date=datetime.now())
             db.session.add(user)
             db.session.commit()
+            # session["email"] = user.email  
             flash("Account created! Please log in")            
 
         return redirect(url_for('index'))
@@ -61,6 +64,7 @@ def register_user():
     return render_template('signup.html')
 
 
+# LOGIN
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """Process user login"""
@@ -80,17 +84,203 @@ def login():
     return render_template('login.html')
 
 
+# DASHBOARD/ALL SHEETS
 @app.route('/dashboard')
 def dashboard():
-    if 'email' in session:    
-        return render_template('dashboard.html')
-    return redirect(url_for('index'))
+    if "email" not in session:
+        # return redirect(url_for("login"))
+        return redirect(url_for('index'))
+    email = session['email']
+    user = get_user_by_email(email)
+    if user is None:
+        return redirect(url_for("login"))
+    api_credentials = user.api_credentials
+    if api_credentials is None:
+        return redirect('/oauth')
+    
+    sheets = get_sheets_by_user(user.id)
+    if sheets is None:
+        print("No sheets for this user yet")
+    
+    return render_template('dashboard.html', sheets=sheets)
+
+@app.route('/api/sheets/<google_spreadsheet_id>', methods=['GET'])
+def sheet_read_all(google_spreadsheet_id):
+    return jsonify([])
+
+# SHOW SHEET BEHAVIORS
+@app.route('/sheets/<sheet_id>', methods=['GET'])
+def show_sheet(sheet_id):
+    if "email" not in session:
+        return redirect(url_for("login"))
+    email = session["email"]
+    user = get_user_by_email(email)
+    if user is None:
+        return redirect(url_for("login"))
+
+    sheet = get_sheet_by_id(sheet_id)
+    
+    return render_template('show_sheet.html', sheet=sheet)
 
 
+# NEW SHEET
+@app.route('/new')
+def new_project():
+
+    if "email" not in session:
+        return redirect(url_for("login"))
+    email = session["email"]
+    user = get_user_by_email(email)
+    if user is None:
+        return redirect(url_for("login"))
+    api_credentials = user.api_credentials
+    
+    if api_credentials is None:
+        return redirect('/oauth')
+    
+    return render_template('new_sheet.html')
+
+
+# CREATE SHEET
+@app.route('/create_sheet', methods=['POST'])
+def create_sheet():
+
+    if "email" not in session:
+        return redirect(url_for("login"))
+    email = session["email"]
+    user = get_user_by_email(email)
+    if user is None:
+        return redirect(url_for("login"))
+        
+    api_credentials = user.api_credentials
+
+    if api_credentials is None:
+        return redirect('/oauth')
+
+    # credentials = Credentials(
+    #     token=api_credentials.token,
+    #     refresh_token=api_credentials.refresh_token,
+    #     token_uri=api_credentials.token_uri,
+    #     client_id=api_credentials.client_id,
+    #     client_secret=api_credentials.client_secret,
+    #     scopes=api_credentials.scopes,
+    # )
+
+    # Initializing python object for the google spreadsheets api,
+    # this is an entry point for making all of the spreadsheet api calls
+    #___.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
+    # service = build("sheets", "v4", credentials=credentials)
+    # sheets = service.spreadsheets()
+
+    # spreadsheet_id = "1fumMvRzuEo3URWpRw9iy0Irqo3yryVGcJ0KeZ7eVWUg"
+    # result = (
+    #     sheets
+    #         .values()
+    #         .get(spreadsheetId=spreadsheet_id, range="A1:A10")
+    #         .execute()
+    # )
+    # print(f"===> result: {result}")
+    
+    google_spreadsheet_id=request.form.get("google_spreadsheet_id")
+    sheet_name=request.form.get("sheet_name")
+    
+    try:
+        sheet = create_new_sheet(
+            user_id=user.id, 
+            google_spreadsheet_id=google_spreadsheet_id,
+            sheet_name=sheet_name,
+            num_rows=4,
+            num_columns=3,
+        )
+        db.session.add(sheet)
+        db.session.commit()
+    except sqlalchemy.exc.IntegrityError as e:
+        # error = str(e.__dict__['orig'])
+        flash("Sheet already exist, try new one")
+        return render_template('new_sheet.html')
+
+    flash("Sheet added to SpreadsheetAPI") 
+
+    return redirect(url_for('show_sheet', sheet_id=sheet.id))
+    # return render_template('show_sheet.html', sheet=sheet)
+
+
+# LOGOUT
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('index'))
+
+# OAUTH
+@app.route('/oauth')
+def auth_flow():
+    # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.    
+    flow = Flow.from_client_secrets_file(DEV_CREDENTIALS, scopes=SCOPES)
+    # authorization_url, state = flow.authorization_url(
+    #   # Enable offline access so that you can refresh an access token without
+    #   # re-prompting the user for permission. Recommended for web server apps.
+    #   access_type='offline',
+    #   # Enable incremental authorization. Recommended as a best practice.
+    #   include_granted_scopes='true')
+    flow.redirect_uri = "http://localhost:5000/oauth_callback" # for second step
+    authorization_url, _state = flow.authorization_url(access_type="offline")
+    # print(f"11111 authorization_url: {authorization_url}")
+    # our job to send user to authorization_url 
+    # session["state"] = state
+    return redirect(authorization_url)
+
+
+# OAUTH CALLBACK
+@app.route('/oauth_callback')
+def oauth_callback():
+    # Specify the state when creating the flow in the callback so that it can
+    # verified in the authorization server response.
+    # state = session['state']
+    # print(f"22222 request.url: {request.url}")
+    flow = Flow.from_client_secrets_file(DEV_CREDENTIALS, scopes=SCOPES)
+    flow.redirect_uri = "http://localhost:5000/oauth_callback"
+
+    # Use the authorization server's response to fetch the OAuth 2.0 tokens.   
+    # doesn't return credentials but updates object's field credentials 
+    flow.fetch_token(authorization_response=request.url)
+    credentials = flow.credentials
+
+    # print(f"credentials: {credentials}")
+    # print(f"credentials dict: {credentials.__dict__}")
+
+    # Store credentials in the session
+    # session["credentials"] = credentials_to_dict(credentials)
+
+    if "email" in session:
+        email = session["email"]
+        user = get_user_by_email(email)
+        if user:
+            api_credentials = create_credentials(
+                token=credentials.token, 
+                refresh_token=credentials.refresh_token, 
+                token_uri=credentials.token_uri, 
+                client_id=credentials.client_id, 
+                client_secret=credentials.client_secret, 
+                scopes=credentials.scopes,
+            )
+            user.api_credentials = api_credentials
+            db.session.add(api_credentials)
+            db.session.add(user)
+            db.session.commit()
+            # flash("Credentials added to DB") 
+
+    return redirect("/new")
+
+
+# Google Cloud Platform requirements
+@app.route("/privacy_policy")
+def privacy_policy():
+    return "<p>Privacy Policy goes here</p>"
+
+
+@app.route("/tos")
+def tos():
+    return "<p>Terms Of Service goes here</p>"
 
 
 if __name__ == "__main__":

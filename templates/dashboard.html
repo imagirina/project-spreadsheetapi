@@ -2,7 +2,17 @@
 
 {% block title %}Spreadsheet API &mdash; Dashboard{% endblock %}
 
-{% block navbarRoute %}
+{% block menu %}
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+  <li class="nav-item">
+    <a class="nav-link" href="#">Gallery</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/dashboard">Dashboard</a>
+  </li>
+</ul>
+{% endblock %}
+{% block navbar %}
                 {% if session['email'] %}
                 <form class="d-flex" action="/logout">                  
                   <button class="btn btn-outline-success" type="submit">Log Out</button>
@@ -12,4 +22,22 @@
 
 {% block body %}
     <h3>Dashboard</h3>
+    <form class="d-flex" action="/new">                  
+      <button class="btn btn-primary" type="submit">New Sheet</button>
+    </form>
+
+    <div class="row">    
+    {% for sheet in sheets %}     
+      <div class="col-md-2">
+        <div class="card mt-3">
+          <div class="card-body text-center">
+            <a href="/sheets/{{ sheet.id }}" class="stretched-link ember-view">
+              <h6>{{ sheet.sheet_name }}</h6>
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+
 {% endblock %}

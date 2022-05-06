@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Spreadsheet API &mdash; Add new sheet{% endblock %}
+
+{% block menu %}
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+  <li class="nav-item">
+    <a class="nav-link" href="#">Gallery</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/dashboard">Dashboard</a>
+  </li>
+</ul>
+{% endblock %}
+{% block navbar %}
+                {% if session['email'] %}
+                <form class="d-flex" action="/logout">                  
+                  <button class="btn btn-outline-success" type="submit">Log Out</button>
+                </form>                
+                {% endif %}
+{% endblock %}
+{% block body %}
+        <div class="row">
+            <div class="col-3">
+              &nbsp;
+            </div>
+            <div class="col-6">
+                <form class="row g-3" id="create_sheet_form" action="/create_sheet" method="Post">
+                    <h3>Create a new sheet</h3>
+                    <h6>Representation of a single spreadsheet from your Google Drive</h6>
+                    <div class="mb-3">
+                        <label for="google_spreadsheet_id" class="form-label">Paste a Google Sheet ID</label>
+                        <input type="text" class="form-control" name="google_spreadsheet_id">
+                    </div>
+                    <div class="mb-3">
+                        <label for="sheet_name" class="form-label">Spreadsheet Name</label>
+                        <input type="text" class="form-control" name="sheet_name">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Sheet</button>
+                </form>
+            </div>
+            <div class="col-3">
+                &nbsp;
+            </div>
+        </div>
+{% endblock %}

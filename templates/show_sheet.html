@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Spreadsheet API &mdash; Show Sheet{% endblock %}
+
+{% block menu %}
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+  <li class="nav-item">
+    <a class="nav-link" href="#">Gallery</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/dashboard">Dashboard</a>
+  </li>                  
+</ul>
+{% endblock %}
+{% block navbar %}                
+                {% if session['email'] %}
+                <form class="d-flex" action="/logout">                  
+                  <button class="btn btn-outline-success" type="submit">Log Out</button>
+                </form>                
+                {% endif %}
+{% endblock %}                
+
+{% block body %}
+    <h3>Behaviors for {{ sheet.sheet_name }}</h3>
+    <a href="https://docs.google.com/spreadsheets/d/{{ sheet.google_spreadsheet_id }}/edit#gid=0" target="_blank">Open Spreadsheet in Google Drive</a>    
+    <div class="card mt-3">
+        <div class="card-header">
+            <div class="d-flex align-items-center">
+                <span class="badge badge-info mr-1">GET</span>
+                <h6>Retrieve rows from your sheet</h6>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" value="https://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-label="https://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="button" id="button-addon2">Copy</button>
+                </div>
+              </div>            
+            <h6 class="card-title">Javascript Example</h6>
+            <code class="card card-body bg-light">
+                <pre>
+let url = 'http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}/{{ sheet.sheet_name|lower }}';
+fetch(url)
+    .then((response) => response.json())
+    .then(json => {
+        // Do something with the data
+        console.log(json.sheet1S);
+    });
+                </pre>
+            </code>
+        </div>
+      </div>
+{% endblock %}

@@ -2,16 +2,27 @@
 
 {% block title %}Spreadsheet API{% endblock %}
 
-{% block navbarRoute %}
-                {% if 'email' in session %}
+{% block menu %}
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+  <li class="nav-item">
+    <a class="nav-link" href="#">Gallery</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Documentation</a>
+  </li>
+</ul>
+{% endblock %}
+{% block navbar %}
+  <!--{% if session['email'] %}-->
                 <form class="d-flex" action="/login">                  
                   <button class="btn btn-outline-success" type="submit">Log In</button>
-                </form>                
-                {% else %}
+                </form>
+  <!--{% else %}   -->             
                 <form class="d-flex" action="/signup">                  
                   <button class="btn btn-outline-success" type="submit">Get Started</button>
                 </form>
-                {% endif %}
+  <!--{% endif %}-->
+
 {% endblock %}
 
 {% block body %}
