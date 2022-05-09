@@ -1,4 +1,4 @@
-from model import User, ApiCredentials, Sheet
+from model import db, User, ApiCredentials, Sheet
 
 def create_user(email, password, registration_date):
     """Create and return a new user."""
@@ -43,14 +43,25 @@ def get_user_by_email(email):
 
     return User.query.filter(User.email == email).first()
 
-
 def get_sheets_by_user(id):
     """Return a sheet by user id"""
 
     return Sheet.query.filter(Sheet.user_id == id).all()
 
-
 def get_sheet_by_id(id):
     """Return sheet by sheet id"""
 
     return Sheet.query.filter(Sheet.id == id).first()
+
+def get_credentials_by_spreadsheet_id(google_spreadsheet_id):
+    """Return API Credentials by Google Spreadsheet ID (string)"""
+
+    return ApiCredentials\
+        .query\
+        .join(User)\
+        .join(Sheet)\
+        .filter(Sheet.google_spreadsheet_id == google_spreadsheet_id)\
+        .first()
+    
+    # join_query = ApiCredentials.query.join(User).join(Sheet)
+    # return join_query.filter(Sheet.google_spreadsheet_id == google_spreadsheet_id).first()

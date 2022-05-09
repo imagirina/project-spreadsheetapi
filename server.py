@@ -1,4 +1,4 @@
-# This is a module from Python’s standard library. It contains code related to working with your computer’s operating system.
+# Module from Python’s standard library. It contains code related to working with computer’s operating system.
 import os
 import os.path
 from os import urandom
@@ -6,9 +6,9 @@ from flask import Flask, render_template, request, session, redirect, flash, url
 from flask.json import jsonify
 from model import connect_to_db, db
 from datetime import datetime
-from crud import create_user, create_credentials, get_user_by_email, create_new_sheet, get_sheets_by_user, get_sheet_by_id
-# from sqlalchemy.exc import SQLAlchemyError
+from crud import create_user, create_credentials, get_user_by_email, create_new_sheet, get_sheets_by_user, get_sheet_by_id, get_credentials_by_spreadsheet_id
 import sqlalchemy
+import json
 
 # Authentication and authorization for Google API (verifying identity and access to resources)
 from google.oauth2.credentials import Credentials
@@ -27,7 +27,6 @@ app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True # remove in production (this 
 # INDEX
 @app.route('/')
 def index():    
-    # check if user is logged in and if logged in render the dashboard
     if 'email' in session:
         return redirect(url_for('dashboard'))
 
@@ -87,8 +86,7 @@ def login():
 # DASHBOARD/ALL SHEETS
 @app.route('/dashboard')
 def dashboard():
-    if "email" not in session:
-        # return redirect(url_for("login"))
+    if "email" not in session:        
         return redirect(url_for('index'))
     email = session['email']
     user = get_user_by_email(email)
@@ -104,11 +102,75 @@ def dashboard():
     
     return render_template('dashboard.html', sheets=sheets)
 
+
+
+# [GET] - API that reads data from spreadsheet and returns JSON
 @app.route('/api/sheets/<google_spreadsheet_id>', methods=['GET'])
 def sheet_read_all(google_spreadsheet_id):
-    return jsonify([])
 
-# SHOW SHEET BEHAVIORS
+    api_credentials = get_credentials_by_spreadsheet_id(google_spreadsheet_id)
+
+    if api_credentials is None:
+        return "ERROR: No credentials!", 400
+
+    scopes = json.loads(api_credentials.scopes)
+
+    # print(f"========> scopes: {scopes}")
+
+    credentials = Credentials(
+        token=api_credentials.token,
+        refresh_token=api_credentials.refresh_token,
+        token_uri=api_credentials.token_uri,
+        client_id=api_credentials.client_id,
+        client_secret=api_credentials.client_secret,
+        scopes=scopes,
+    )
+
+    # Initializing python object for the google spreadsheets api,
+    # this is an entry point for making all of the spreadsheet api calls
+    # ___.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
+    service = build("sheets", "v4", credentials=credentials)
+    sheets = service.spreadsheets()
+
+    result = (
+        sheets
+            .values()
+            .get(spreadsheetId=google_spreadsheet_id, range="A1:F10")
+            .execute()
+    )
+
+    print(f"========> result: {result}")
+    # result: {'range': 'Sheet1!A1:F10', 'majorDimension': 'ROWS', 'values': [['Name', 'Email', 'Can Attend'], ['John', 'john@gmail.com', 'TRUE'], ['Sam', 'sam@gmail.com', 'FALSE'], ['Anna', 'anna@gmail.com', 'TRUE']]}
+
+    # first element of result['values'] is a list of column names
+    columns = result['values'][0] 
+    rows = result['values'][1:]
+
+    result = []
+    for row in rows:
+        row_dict = {}
+        # for each column name add a value from the current row under the column's index
+        for idx, column in enumerate(columns):
+            row_dict[column] = row[idx]
+        result.append(row_dict)
+
+    # result = [
+    #     {
+    #         'Name': 'John', 
+    #         'Email': 'john@gmail.com', 
+    #         'Can Attend': 'TRUE',
+    #     },
+    #     {
+    #         'Name': 'Sam', 
+    #         'Email': 'sam@gmail.com', 
+    #         'Can Attend': 'FALSE',
+    #     },
+    # ]
+
+    return jsonify(result)
+
+
+# SHOW SHEET's BEHAVIOR
 @app.route('/sheets/<sheet_id>', methods=['GET'])
 def show_sheet(sheet_id):
     if "email" not in session:
@@ -126,7 +188,6 @@ def show_sheet(sheet_id):
 # NEW SHEET
 @app.route('/new')
 def new_project():
-
     if "email" not in session:
         return redirect(url_for("login"))
     email = session["email"]
@@ -156,30 +217,6 @@ def create_sheet():
 
     if api_credentials is None:
         return redirect('/oauth')
-
-    # credentials = Credentials(
-    #     token=api_credentials.token,
-    #     refresh_token=api_credentials.refresh_token,
-    #     token_uri=api_credentials.token_uri,
-    #     client_id=api_credentials.client_id,
-    #     client_secret=api_credentials.client_secret,
-    #     scopes=api_credentials.scopes,
-    # )
-
-    # Initializing python object for the google spreadsheets api,
-    # this is an entry point for making all of the spreadsheet api calls
-    #___.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
-    # service = build("sheets", "v4", credentials=credentials)
-    # sheets = service.spreadsheets()
-
-    # spreadsheet_id = "1fumMvRzuEo3URWpRw9iy0Irqo3yryVGcJ0KeZ7eVWUg"
-    # result = (
-    #     sheets
-    #         .values()
-    #         .get(spreadsheetId=spreadsheet_id, range="A1:A10")
-    #         .execute()
-    # )
-    # print(f"===> result: {result}")
     
     google_spreadsheet_id=request.form.get("google_spreadsheet_id")
     sheet_name=request.form.get("sheet_name")
@@ -201,8 +238,7 @@ def create_sheet():
 
     flash("Sheet added to SpreadsheetAPI") 
 
-    return redirect(url_for('show_sheet', sheet_id=sheet.id))
-    # return render_template('show_sheet.html', sheet=sheet)
+    return redirect(url_for('show_sheet', sheet_id=sheet.id))    
 
 
 # LOGOUT
@@ -224,9 +260,6 @@ def auth_flow():
     #   include_granted_scopes='true')
     flow.redirect_uri = "http://localhost:5000/oauth_callback" # for second step
     authorization_url, _state = flow.authorization_url(access_type="offline")
-    # print(f"11111 authorization_url: {authorization_url}")
-    # our job to send user to authorization_url 
-    # session["state"] = state
     return redirect(authorization_url)
 
 
@@ -261,7 +294,7 @@ def oauth_callback():
                 token_uri=credentials.token_uri, 
                 client_id=credentials.client_id, 
                 client_secret=credentials.client_secret, 
-                scopes=credentials.scopes,
+                scopes=json.dumps(credentials.scopes),
             )
             user.api_credentials = api_credentials
             db.session.add(api_credentials)
