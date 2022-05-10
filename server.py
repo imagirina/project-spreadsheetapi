@@ -19,6 +19,7 @@ app = Flask(__name__)
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1" # need this for http://localhost:5000 oAuth
 DEV_CREDENTIALS = os.environ['DEV_CREDENTIALS']
+# Scopes controls the set of resources and operations that an access token permits
 SCOPES = [os.environ['SCOPE']]
 app.secret_key = os.environ['FLASK_SESSION_KEY']
 app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True # remove in production (this configuration option makes the Flask interactive debugger)
@@ -247,34 +248,41 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-# OAUTH
+# OAUTH FLOW 
 @app.route('/oauth')
 def auth_flow():
-    # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.    
+    # Managing OAuth 2.0 Authorization Grant Flow
+    # The authorization begins when my application redirects a browser to a Google URL
+    # The URL includes query parameters that indicate the type of access being requested
+    # Google handles the user auth and user consent, the result is an authorization code, which the app can exchange for an access token and a refresh token
+    
+    # Step 1 - introducing yourself as web developer
     flow = Flow.from_client_secrets_file(DEV_CREDENTIALS, scopes=SCOPES)
-    # authorization_url, state = flow.authorization_url(
-    #   # Enable offline access so that you can refresh an access token without
-    #   # re-prompting the user for permission. Recommended for web server apps.
-    #   access_type='offline',
-    #   # Enable incremental authorization. Recommended as a best practice.
-    #   include_granted_scopes='true')
+
+    # Step 2 = Confirmation of user's consent to trust your app so app will be able to access user's data
+    # If user grants permission, the Google Authorization Server send our app an access token (or an authorization code that your application can use to obtain an access token) and a list of scopes of access granted by that token. 
+    # If user doesn't grant the access -> the server returns an error.
     flow.redirect_uri = "http://localhost:5000/oauth_callback" # for second step
+
+    # After an application obtains an access token, it sends the token to a Google API in an HTTP Authorization request header.
     authorization_url, _state = flow.authorization_url(access_type="offline")
     return redirect(authorization_url)
 
 
-# OAUTH CALLBACK
+
+# OAUTH CALLBACK FLOW (where my user will be redirected once they logged in to their google account)
 @app.route('/oauth_callback')
 def oauth_callback():
-    # Specify the state when creating the flow in the callback so that it can
-    # verified in the authorization server response.
-    # state = session['state']
-    # print(f"22222 request.url: {request.url}")
+    # Verifying the authorization server response
+    # We authenticate Google API by giving our credentials
     flow = Flow.from_client_secrets_file(DEV_CREDENTIALS, scopes=SCOPES)
     flow.redirect_uri = "http://localhost:5000/oauth_callback"
 
-    # Use the authorization server's response to fetch the OAuth 2.0 tokens.   
+    # Client application requests an access token from the Google Authorization Server, 
+    # extracts a token from the response, and sends the token to the Google API that we want to access
+    # Use the authorization server's response to fetch the OAuth 2.0 tokens
     # doesn't return credentials but updates object's field credentials 
+
     flow.fetch_token(authorization_response=request.url)
     credentials = flow.credentials
 
@@ -283,6 +291,10 @@ def oauth_callback():
 
     # Store credentials in the session
     # session["credentials"] = credentials_to_dict(credentials)
+
+    # The application should store the refresh token for future use and use the access token to access a Google API. 
+    # Once the access token expires, the application uses the refresh token to obtain a new one
+    # Whenever credentials will be expired, we will refresh them
 
     if "email" in session:
         email = session["email"]

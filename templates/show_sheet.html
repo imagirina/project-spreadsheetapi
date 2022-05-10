@@ -32,15 +32,17 @@
         </div>
         <div class="card-body">
             <div class="input-group mb-3">
-                <input type="text" class="form-control" value="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-label="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-describedby="button-addon2">
+                <input type="text" class="form-control" id="SheetId" value="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-label="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-describedby="btnCopy">
                 <div class="input-group-append">
-                  <button class="btn btn-primary" type="button" id="button-addon2">Copy</button>
+                  <button class="btn btn-primary" type="button" id="btnCopy" data-toggle="tooltip" data-placement="button"
+                  title="Copy to Clipboard">Copy</button>
                 </div>
               </div>            
             <h6 class="card-title">Javascript Example</h6>
             <code class="card card-body bg-light">
+              <!--/{{ sheet.sheet_name|lower }}-->
                 <pre>
-let url = 'http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}/{{ sheet.sheet_name|lower }}';
+let url = 'http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}';
 fetch(url)
     .then((response) => response.json())
     .then(json => {
@@ -51,4 +53,5 @@ fetch(url)
             </code>
         </div>
       </div>
+      <script src="/static/event_handlers.js"></script>      
 {% endblock %}
