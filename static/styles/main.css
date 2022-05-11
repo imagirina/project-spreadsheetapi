@@ -1,3 +1,7 @@
+body div.content {
+    margin-top: 2em;
+}
+
 .me-auto {
     margin-left: auto!important;
 }

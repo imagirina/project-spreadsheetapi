@@ -1,7 +1,6 @@
 # Module from Python’s standard library. It contains code related to working with computer’s operating system.
 import os
 import os.path
-from os import urandom
 from flask import Flask, render_template, request, session, redirect, flash, url_for
 from flask.json import jsonify
 from model import connect_to_db, db
@@ -70,7 +69,7 @@ def login():
     """Process user login"""
 
     if request.method == 'POST':
-        email = request.form.get("email")    
+        email = request.form.get("email")
         password = request.form.get("password")
 
         user = get_user_by_email(email)
@@ -104,6 +103,93 @@ def dashboard():
     return render_template('dashboard.html', sheets=sheets)
 
 
+# [POST] - API that adds row to spreadsheet and returns JSON
+@app.route('/api/sheets/<google_spreadsheet_id>', methods=['POST'])
+def sheet_add_row(google_spreadsheet_id):
+    """Need to obtain the access token from the Authorization Header"""
+
+    # breakpoint()
+    # request.json
+
+    
+    api_credentials = get_credentials_by_spreadsheet_id(google_spreadsheet_id)
+    if api_credentials is None:
+        return "ERROR: No credentials", 400
+
+    scopes = json.loads(api_credentials.scopes)
+
+    # Instantiate Google's Class, pass it to the build() for initializing library
+    credentials = Credentials(
+        token=api_credentials.token,
+        refresh_token=api_credentials.refresh_token,
+        token_uri=api_credentials.token_uri,
+        client_id=api_credentials.client_id,
+        client_secret=api_credentials.client_secret,
+        scopes=scopes,
+    )
+
+    # Initializing python object for the google spreadsheets api,
+    # this is an entry point for making all of the spreadsheet api calls
+    # ___.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
+    service = build("sheets", "v4", credentials=credentials)
+    sheets = service.spreadsheets()
+
+    columns_info = (
+        sheets
+            .values()
+            .get(spreadsheetId=google_spreadsheet_id, range="A1:C1")
+            .execute()
+    )
+
+    columns = columns_info['values'][0]
+    
+    # What user will enter
+    #     {
+    #         "name": "Jonny",
+    #         "state": "WA",
+    #         "canAttend": true,
+    #     } 
+
+    json_row = request.json
+
+    values = []
+    for col_name in columns:
+        values.append(json_row.get(col_name))
+
+    print(f"\n\n================================================\n\n")
+    print(f"JSON ROW ====> {json_row}")
+    print(f"COLUMNS ====> {columns}")
+    print(f"values =====> {values}")
+
+    # values = [
+    #     ['Lena', 'CA', 'TRUE']
+    # ]
+
+    body = {
+        'majorDimension': 'ROWS',
+        'values': [values],
+    }
+
+    api_request = sheets\
+                .values()\
+                .append(
+                    spreadsheetId=google_spreadsheet_id, 
+                    range="A1:F10",
+                    valueInputOption='RAW',
+                    body=body)
+    response = api_request.execute()
+
+    print('===============> {0} cells appended.'.format(response
+                               .get('updates')
+                               .get('updatedCells')))
+    print(f"========> response: {response}")
+    # The response will consist of an UpdateValuesResponse object such as this one:
+    # response: {'spreadsheetId': '1cs2r_BWDDkMpEnz96RMfjeGIuqEUj_gLM0v0uwqAfSg', 'tableRange': 'Sheet1!A1:C6', 'updates': {'spreadsheetId': '1cs2r_BWDDkMpEnz96RMfjeGIuqEUj_gLM0v0uwqAfSg', 'updatedRange': 'Sheet1!A7:C7', 'updatedRows': 1, 'updatedColumns': 3, 'updatedCells': 3}}
+
+    # return "{}"
+    return jsonify(json_row)
+
+
 
 # [GET] - API that reads data from spreadsheet and returns JSON
 @app.route('/api/sheets/<google_spreadsheet_id>', methods=['GET'])
@@ -118,6 +204,7 @@ def sheet_read_all(google_spreadsheet_id):
 
     # print(f"========> scopes: {scopes}")
 
+    # Instantiate Google's Class, pass it to the build() for initializing library
     credentials = Credentials(
         token=api_credentials.token,
         refresh_token=api_credentials.refresh_token,

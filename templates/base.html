@@ -31,8 +31,10 @@
           <p id="flashed_messages">
             {{ message }}
           </p>
-            {% endfor %}                  
-        {% block body %}{% endblock %}
+            {% endfor %}
+        <div class="content">
+          {% block body %}{% endblock %}
+        </div>
     </div>
   </body>
 </html>
