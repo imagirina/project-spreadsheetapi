@@ -1,6 +1,7 @@
 # Module from Python’s standard library. It contains code related to working with computer’s operating system.
 import os
 import os.path
+from click import get_app_dir
 from flask import Flask, render_template, request, session, redirect, flash, url_for
 from flask.json import jsonify
 from model import connect_to_db, db
@@ -103,6 +104,96 @@ def dashboard():
     return render_template('dashboard.html', sheets=sheets)
 
 
+# [PUT] - API that updates the row in spreadsheet
+@app.route('/api/sheets/<google_spreadsheet_id>/<object_id>', methods=['PUT'])
+def sheet_update_row(google_spreadsheet_id, object_id):
+    try:
+        object_id = int(object_id)
+    except ValueError:
+        return "ERROR: Object ID is invalid", 400
+
+    api_credentials = get_credentials_by_spreadsheet_id(google_spreadsheet_id)
+    if api_credentials is None:
+        return "ERROR: No credentials", 400
+
+    scopes = json.loads(api_credentials.scopes)
+
+    # In order to work with the Google's library we need to make an instance from the Google's Class and pass it to the build()
+    credentials = Credentials(
+        token = api_credentials.token,
+        refresh_token = api_credentials.refresh_token,
+        token_uri = api_credentials.token_uri,
+        client_id = api_credentials.client_id,
+        client_secret = api_credentials.client_secret,
+        scopes = scopes,
+    )
+
+    # Entry point for all API calls
+    service = build("sheets", "v4", credentials=credentials)
+    sheets = service.spreadsheets()
+
+    # Many of the "Update" requests require field masks. These are a comma-delimited list of fields that you want to update. The mask is required to make sure only fields you want to edit are updated. You can use a "*" as short-hand for updating every field 
+
+    columns_info = (
+        sheets
+            .values()
+            .get(spreadsheetId=google_spreadsheet_id, range="A1:Z1")
+            .execute()
+    )
+
+    columns = columns_info['values'][0]
+    print(f"==== columns: {columns}")
+
+    payload = request.json
+    print(f"=== payload: {payload}")
+
+    batch_update_body = {
+        'value_input_option': 'RAW',
+        'data': [],
+    }
+
+    for column_to_update in payload.keys():
+        # print(f"=== column_to_update: {column_to_update}")
+        try:
+            column_index = columns.index(column_to_update)
+            sheet_range = f"{chr(65 + column_index)}{object_id}"
+            # print(f"=== sheet_range: {sheet_range}")
+            batch_update_body['data'].append({
+                'range': f"{sheet_range}:{sheet_range}",
+                'majorDimension': 'ROWS',
+                'values': [[payload[column_to_update]]]
+            })
+        
+        except ValueError:
+            pass
+    
+    # print(f"==== batch_update_body: {batch_update_body}")
+
+    update_api_request = (
+        sheets\
+            .values()\
+            .batchUpdate(
+                spreadsheetId=google_spreadsheet_id,
+                body=batch_update_body
+            )
+    )
+    update_response = update_api_request.execute()
+
+    # print(f"=== update_response: {update_response}")
+    if update_response.get('totalUpdatedRows') == 1:
+        updated_data = payload
+        updated_data['id'] = object_id
+        return jsonify(updated_data)
+
+    return jsonify({
+        'message': "Update failed, please try again"
+    }), 500
+    # there is class Range() in Spreadsheet API
+    # methods getRow()
+    # getRowIndex()
+
+
+
 # [POST] - API that adds row to spreadsheet and returns JSON
 @app.route('/api/sheets/<google_spreadsheet_id>', methods=['POST'])
 def sheet_add_row(google_spreadsheet_id):
@@ -141,7 +232,7 @@ def sheet_add_row(google_spreadsheet_id):
             .execute()
     )
 
-    columns = columns_info['values'][0]
+    columns = columns_info['values'][0]    
     
     # What user will enter
     #     {
@@ -223,7 +314,7 @@ def sheet_read_all(google_spreadsheet_id):
     result = (
         sheets
             .values()
-            .get(spreadsheetId=google_spreadsheet_id, range="A1:F10")
+            .get(spreadsheetId=google_spreadsheet_id, range="A1:Z1000")
             .execute()
     )
 
@@ -235,11 +326,13 @@ def sheet_read_all(google_spreadsheet_id):
     rows = result['values'][1:]
 
     result = []
-    for row in rows:
-        row_dict = {}
+    for row_idx, row in enumerate(rows):
+        if len([col for col in row if col is not None and col.strip() != '']) == 0:
+            continue
+        row_dict = { 'id': row_idx + 2 }
         # for each column name add a value from the current row under the column's index
-        for idx, column in enumerate(columns):
-            row_dict[column] = row[idx]
+        for column_idx, column in enumerate(columns):
+            row_dict[column] = row[column_idx]
         result.append(row_dict)
 
     # result = [

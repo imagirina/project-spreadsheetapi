@@ -1,0 +1,39 @@
+            <!-- PUT (edit a row in your spreadsheet) -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <span class="badge badge-info mr-1">PUT</span>
+                        <h6>Edit a row in your spreadsheet</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="SheetId" value="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}/[Object ID]" aria-label="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-describedby="btnCopy">
+                        <div class="input-group-append">
+                          <button class="btn btn-primary" type="button" id="btnCopy" data-toggle="tooltip" data-placement="button"
+                          title="Copy to Clipboard">Copy</button>
+                        </div>
+                    </div>            
+                    <h6 class="card-title">Javascript Example</h6>
+                    <code class="card card-body bg-light">
+                      <!--/{{ sheet.sheet_name|lower }}-->
+                        <pre>
+  
+    let url = 'http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}/2';
+    let body = {
+        ...
+    }
+    fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(body)
+    })
+        .then((response) => response.json())
+        .then(json => {
+            // Do something with object
+            console.log(json.sheet1);
+        });
+                        </pre>
+                    </code>
+                </div>
+              </div>
+              <!-- /PUT (edit a row in your spreadsheet) -->

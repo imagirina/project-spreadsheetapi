@@ -20,6 +20,11 @@ body div.content {
 .navbar>.container-fluid {
     padding-left: 0;
 }
+h3.display-6 {
+    font-family: sans-serif;
+    font-weight: bold;
+    line-height: 1.2;
+}
 
 h6 {
     margin: 8px 0;
@@ -45,11 +50,10 @@ h6 {
     border-color: #00B779;
 }
 
-a {
+a, .nav-link {
     color: #20c998;
-    text-decoration: underline;
 }
-a:hover {
+a:hover, .nav-link:hover {
     color: #00B779;
 }
 
@@ -67,4 +71,15 @@ a:hover {
     border-left-color: rgb(56, 255, 187);
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgb(0 183 121 / 25%);
+}
+
+
+#myTab {
+    margin-top: 25px;
+}
+
+
+.nav-item button.nav-link.active {
+    font-weight: bold;
+    color: #000;
 }
