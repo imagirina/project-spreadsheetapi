@@ -104,6 +104,58 @@ def dashboard():
     return render_template('dashboard.html', sheets=sheets)
 
 
+# [DELETE] - API that deletes the row in the spreadsheet
+@app.route('/api/sheets/<google_spreadsheet_id>/<object_id>', methods=['DELETE'])
+def sheet_delete_row(google_spreadsheet_id, object_id):
+    try:
+        object_id = int(object_id)
+    except ValueError:
+        return "ERROR: Object ID is invalid", 400
+
+    api_credentials = get_credentials_by_spreadsheet_id(google_spreadsheet_id)
+    if api_credentials is None:
+        return "ERROR: No credentials", 400
+
+    scopes = json.loads(api_credentials.scopes)
+
+    # Making an instance from the Google class and passing it to the build()
+    credentials = Credentials(
+        token = api_credentials.token,
+        refresh_token = api_credentials.refresh_token,
+        token_uri = api_credentials.token_uri,
+        client_id = api_credentials.client_id,
+        client_secret = api_credentials.client_secret,
+        scopes = scopes
+    )
+
+    # Entry point for all API calls
+    service = build("sheets", "v4", credentials=credentials)
+    sheets = service.spreadsheets() # <googleapiclient.discovery.Resource object at 0x110c88070>
+
+    # clear() - clears values from a spreadsheet. 
+    # The caller must specify the spreadsheet ID and range
+    # Only values are cleared -- all other properties of the cell (such as 
+    # formatting, data validation, etc..) are kept.
+
+    sheet_range = f"{object_id}:{object_id}"
+
+    clear_values_request_body = {
+        'range': f"{sheet_range}:{sheet_range}",
+    }
+
+    delete_api_request = sheets\
+                            .values()\
+                            .clear(spreadsheetId=google_spreadsheet_id, 
+                            range=sheet_range, 
+                            body=clear_values_request_body)
+
+    delete_responce = delete_api_request.execute()
+
+    print(f"DELETE_RESPONCE ===> {delete_responce}")
+
+    return {}
+
+
 # [PUT] - API that updates the row in spreadsheet
 @app.route('/api/sheets/<google_spreadsheet_id>/<object_id>', methods=['PUT'])
 def sheet_update_row(google_spreadsheet_id, object_id):
@@ -140,6 +192,7 @@ def sheet_update_row(google_spreadsheet_id, object_id):
             .get(spreadsheetId=google_spreadsheet_id, range="A1:Z1")
             .execute()
     )
+    # columns_info = {'range': 'Sheet1!A1:Z1', 'majorDimension': 'ROWS', 'values': [['Name', 'State', 'Can Attend']]}
 
     columns = columns_info['values'][0]
     print(f"==== columns: {columns}")
@@ -156,17 +209,17 @@ def sheet_update_row(google_spreadsheet_id, object_id):
         # print(f"=== column_to_update: {column_to_update}")
         try:
             column_index = columns.index(column_to_update)
+            print(f"=== COLUMN INDEX: {column_index}")
             sheet_range = f"{chr(65 + column_index)}{object_id}"
-            # print(f"=== sheet_range: {sheet_range}")
+            print(f"=== SHEET RANGE: {sheet_range}")
             batch_update_body['data'].append({
                 'range': f"{sheet_range}:{sheet_range}",
                 'majorDimension': 'ROWS',
                 'values': [[payload[column_to_update]]]
             })
-        
         except ValueError:
             pass
-    
+
     # print(f"==== batch_update_body: {batch_update_body}")
 
     update_api_request = (
@@ -188,10 +241,6 @@ def sheet_update_row(google_spreadsheet_id, object_id):
     return jsonify({
         'message': "Update failed, please try again"
     }), 500
-    # there is class Range() in Spreadsheet API
-    # methods getRow()
-    # getRowIndex()
-
 
 
 # [POST] - API that adds row to spreadsheet and returns JSON
