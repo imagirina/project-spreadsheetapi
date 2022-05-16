@@ -128,32 +128,50 @@ def sheet_delete_row(google_spreadsheet_id, object_id):
         scopes = scopes
     )
 
-    # Entry point for all API calls
+    # Entry point for all API calls (API is inabled)
     service = build("sheets", "v4", credentials=credentials)
     sheets = service.spreadsheets() # <googleapiclient.discovery.Resource object at 0x110c88070>
 
-    # clear() - clears values from a spreadsheet. 
-    # The caller must specify the spreadsheet ID and range
-    # Only values are cleared -- all other properties of the cell (such as 
-    # formatting, data validation, etc..) are kept.
+    # Deleting rows with the Sheets API v4 is handled by a spreadsheet.batchUpdate method call, using a DeleteDimension request
+    # The row indices are zero-based, with the startIndex inclusive and endIndex exclusive
 
-    sheet_range = f"{object_id}:{object_id}"
-
-    clear_values_request_body = {
-        'range': f"{sheet_range}:{sheet_range}",
+    batch_update_spreadsheet_request_body = {
+        "requests": [
+            {
+                "deleteDimension": {
+                    "range": {
+                    #"sheetId": google_spreadsheet_id,
+                    "dimension": "ROWS",
+                    "startIndex": object_id - 1,
+                    "endIndex": object_id,
+                    }
+                }
+            }
+        ],
+        # "includeSpreadsheetInResponse": boolean,
+        # "responseRanges": [
+        #     string
+        # ],
+        # "responseIncludeGridData": boolean
     }
 
+    # sheet_range = f"{object_id}:{object_id}"
+
+    # clear_values_request_body = {
+    #     'range': f"{sheet_range}:{sheet_range}",
+    # }
+
     delete_api_request = sheets\
-                            .values()\
-                            .clear(spreadsheetId=google_spreadsheet_id, 
-                            range=sheet_range, 
-                            body=clear_values_request_body)
+                            .batchUpdate(spreadsheetId=google_spreadsheet_id,
+                            body=batch_update_spreadsheet_request_body)
 
     delete_responce = delete_api_request.execute()
 
     print(f"DELETE_RESPONCE ===> {delete_responce}")
 
-    return {}
+    return jsonify({
+        'message': "The object was successfully deleted"
+    }), 200
 
 
 # [PUT] - API that updates the row in spreadsheet
