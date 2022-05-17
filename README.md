@@ -2,8 +2,6 @@
 
 Work on Hackbright Academy Capstone Project is in progress...
 
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5631/badge)](https://bestpractices.coreinfrastructure.org/projects/5631)
-
 _Spreadsheet API_ is a service that allows creators to build frontends utilizing Google Spreadsheet as a database exposed via REST API. This way, creators can focus on their MVP rather than implementing data model and backend.
 
 ## **Table of Contents**
