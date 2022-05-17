@@ -9,6 +9,7 @@ _Spreadsheet API_ is a service that allows creators to build frontends utilizing
 - [Tech Stack](https://github.com/imagirina/project-spreadsheetapi#tech-stack)
 - [Database Model](https://github.com/imagirina/project-spreadsheetapi#database-model)
 - [Usage](https://github.com/imagirina/project-spreadsheetapi#usage)
+- [Demo](https://github.com/imagirina/project-spreadsheetapi#demo)
 - [Installation](https://github.com/imagirina/project-spreadsheetapi#installation)
 
 ## **Tech Stack**
