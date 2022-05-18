@@ -1,1 +1,34 @@
-Updating/Deleting spreadshit
+<div class="row">
+    <div class=""col-lg-6">
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <h6>Edit Spreadsheet</h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">Warning: Changing the project name will also change your API URLs</small>
+                <form class="d-flex" action="/delete_spreadsheet">
+                    <input type="text" class="form-control ember-text-field ember-view"/>
+                    <button class="btn btn-primary mb-4" type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class=""col-lg-6">
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <span class="badge badge-info mr-1 danger">DANGER</span>
+                    <h6>Delete Spreadsheet</h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <p>Deleting this project will make its API unavailable immediately. This action cannot be undone.</p>
+                <form class="d-flex" action="/delete_spreadsheet">
+                    <button class="btn btn-danger" type="submit">Delete Spreadsheet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

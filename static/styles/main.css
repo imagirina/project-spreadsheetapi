@@ -30,6 +30,10 @@ h6 {
     margin: 8px 0;
 }
 
+.badge.badge-info.mr-1.danger {
+    background-color: #dc3545;
+    margin-right: 8px;
+}
 .badge.badge-info.mr-1 {
     background-color: #20c997;
     margin-right: 8px;
@@ -82,4 +86,29 @@ a:hover, .nav-link:hover {
 .nav-item button.nav-link.active {
     font-weight: bold;
     color: #000;
+}
+
+.lead {
+    font-size: 0.95em;
+}
+
+.filter-green {
+    filter: invert(67%) sepia(18%) saturate(1928%) hue-rotate(111deg) brightness(97%) contrast(75%);
+}
+
+.table td, .table th {
+    vertical-align: top;
+}
+.table tr.row_total {
+    border-bottom: 1px solid #fff;
+}
+.row_total td {
+    font-weight: 500;
+}
+
+
+
+.col-lg-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
 }

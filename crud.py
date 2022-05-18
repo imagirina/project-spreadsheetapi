@@ -1,4 +1,4 @@
-from model import db, User, ApiCredentials, Sheet
+from model import db, User, ApiCredentials, Sheet, SheetStats
 
 def create_user(email, password, registration_date):
     """Create and return a new user."""
@@ -36,6 +36,17 @@ def create_new_sheet(user_id, google_spreadsheet_id, sheet_name, num_rows, num_c
         num_columns = num_columns,
     )
 
+    # Add sheet id into sheet_stats table, set columns to 0
+    sheet_stats = SheetStats(
+        sheet_id = sheet.id,
+        get = 0,
+        post = 0,
+        put = 0,
+        delete = 0 
+    )
+    db.session.add(sheet_stats)
+    db.session.commit()
+
     return sheet
 
 def get_user_by_email(email):
@@ -53,6 +64,24 @@ def get_sheet_by_id(id):
 
     return Sheet.query.filter(Sheet.id == id).first()
 
+def update_sheet_stats_counter(google_spreadsheet_id, method_name):
+    """ Update sheet_stats table (column that stores number of requests for each API call) """
+
+    sheet = Sheet.query.filter(Sheet.google_spreadsheet_id == google_spreadsheet_id).first()
+    setattr(sheet.sheet_stats, method_name, getattr(sheet.sheet_stats, method_name, 0) + 1)
+    db.session.commit()
+
+    # db.session.query(SheetStats).\
+    #            filter(SheetStats.sheet_id == sheet_id).\
+    #            update({SheetStats.method_name: SheetStats.method_name + 1});
+    # db.session.commit()
+
+# def get_stats_by_sheet_id(id):
+#     """ Return statistics by sheet id"""
+
+#     return SheetStats.query.filter(SheetStats.sheet_id == id).first()
+#     # return SheetStats.query.get(id)
+
 def get_credentials_by_spreadsheet_id(google_spreadsheet_id):
     """Return API Credentials by Google Spreadsheet ID (string)"""
 
@@ -62,6 +91,3 @@ def get_credentials_by_spreadsheet_id(google_spreadsheet_id):
         .join(Sheet)\
         .filter(Sheet.google_spreadsheet_id == google_spreadsheet_id)\
         .first()
-    
-    # join_query = ApiCredentials.query.join(User).join(Sheet)
-    # return join_query.filter(Sheet.google_spreadsheet_id == google_spreadsheet_id).first()

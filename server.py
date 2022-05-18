@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, session, redirect, flash, url
 from flask.json import jsonify
 from model import connect_to_db, db
 from datetime import datetime
-from crud import create_user, create_credentials, get_user_by_email, create_new_sheet, get_sheets_by_user, get_sheet_by_id, get_credentials_by_spreadsheet_id
+from crud import create_user, create_credentials, get_user_by_email, create_new_sheet, get_sheets_by_user, get_sheet_by_id, get_credentials_by_spreadsheet_id, update_sheet_stats_counter
 import sqlalchemy
 import json
 
@@ -27,11 +27,19 @@ app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True # remove in production (this 
 
 # INDEX
 @app.route('/')
+@app.route('/index')
 def index():    
     if 'email' in session:
         return redirect(url_for('dashboard'))
 
     return render_template('index.html')
+
+
+# 404
+@app.errorhandler(404)
+# Inbuilt function which takes error as parameter
+def not_found(e):
+    return render_template("404.html")
 
 
 # SIGNUP
@@ -132,8 +140,7 @@ def sheet_delete_row(google_spreadsheet_id, object_id):
     service = build("sheets", "v4", credentials=credentials)
     sheets = service.spreadsheets() # <googleapiclient.discovery.Resource object at 0x110c88070>
 
-    # Deleting rows with the Sheets API v4 is handled by a spreadsheet.batchUpdate method call, using a DeleteDimension request
-    # The row indices are zero-based, with the startIndex inclusive and endIndex exclusive
+    update_sheet_stats_counter(google_spreadsheet_id, 'delete')
 
     batch_update_spreadsheet_request_body = {
         "requests": [
@@ -148,26 +155,19 @@ def sheet_delete_row(google_spreadsheet_id, object_id):
                 }
             }
         ],
-        # "includeSpreadsheetInResponse": boolean,
-        # "responseRanges": [
-        #     string
-        # ],
-        # "responseIncludeGridData": boolean
     }
 
     # sheet_range = f"{object_id}:{object_id}"
-
     # clear_values_request_body = {
     #     'range': f"{sheet_range}:{sheet_range}",
     # }
 
+    # Deleting rows with the Sheets API v4 is handled by a spreadsheet.batchUpdate method call
     delete_api_request = sheets\
                             .batchUpdate(spreadsheetId=google_spreadsheet_id,
                             body=batch_update_spreadsheet_request_body)
 
     delete_responce = delete_api_request.execute()
-
-    print(f"DELETE_RESPONCE ===> {delete_responce}")
 
     return jsonify({
         'message': "The object was successfully deleted"
@@ -202,7 +202,7 @@ def sheet_update_row(google_spreadsheet_id, object_id):
     service = build("sheets", "v4", credentials=credentials)
     sheets = service.spreadsheets()
 
-    # Many of the "Update" requests require field masks. These are a comma-delimited list of fields that you want to update. The mask is required to make sure only fields you want to edit are updated. You can use a "*" as short-hand for updating every field 
+    update_sheet_stats_counter(google_spreadsheet_id, 'put')
 
     columns_info = (
         sheets
@@ -213,10 +213,8 @@ def sheet_update_row(google_spreadsheet_id, object_id):
     # columns_info = {'range': 'Sheet1!A1:Z1', 'majorDimension': 'ROWS', 'values': [['Name', 'State', 'Can Attend']]}
 
     columns = columns_info['values'][0]
-    print(f"==== columns: {columns}")
 
     payload = request.json
-    print(f"=== payload: {payload}")
 
     batch_update_body = {
         'value_input_option': 'RAW',
@@ -224,7 +222,6 @@ def sheet_update_row(google_spreadsheet_id, object_id):
     }
 
     for column_to_update in payload.keys():
-        # print(f"=== column_to_update: {column_to_update}")
         try:
             column_index = columns.index(column_to_update)
             print(f"=== COLUMN INDEX: {column_index}")
@@ -291,6 +288,8 @@ def sheet_add_row(google_spreadsheet_id):
     # ___.build(API_SERVICE_NAME, API_VERSION, credentials=credentials)
     service = build("sheets", "v4", credentials=credentials)
     sheets = service.spreadsheets()
+
+    update_sheet_stats_counter(google_spreadsheet_id, 'post')
 
     columns_info = (
         sheets
@@ -360,8 +359,6 @@ def sheet_read_all(google_spreadsheet_id):
 
     scopes = json.loads(api_credentials.scopes)
 
-    # print(f"========> scopes: {scopes}")
-
     # Instantiate Google's Class, pass it to the build() for initializing library
     credentials = Credentials(
         token=api_credentials.token,
@@ -378,6 +375,9 @@ def sheet_read_all(google_spreadsheet_id):
     service = build("sheets", "v4", credentials=credentials)
     sheets = service.spreadsheets()
 
+
+    update_sheet_stats_counter(google_spreadsheet_id, 'get')
+
     result = (
         sheets
             .values()
@@ -385,10 +385,8 @@ def sheet_read_all(google_spreadsheet_id):
             .execute()
     )
 
-    print(f"========> result: {result}")
     # result: {'range': 'Sheet1!A1:F10', 'majorDimension': 'ROWS', 'values': [['Name', 'Email', 'Can Attend'], ['John', 'john@gmail.com', 'TRUE'], ['Sam', 'sam@gmail.com', 'FALSE'], ['Anna', 'anna@gmail.com', 'TRUE']]}
 
-    # first element of result['values'] is a list of column names
     columns = result['values'][0] 
     rows = result['values'][1:]
 
@@ -420,7 +418,7 @@ def sheet_read_all(google_spreadsheet_id):
 
 # SHOW SHEET's BEHAVIOR
 @app.route('/sheets/<sheet_id>', methods=['GET'])
-def show_sheet(sheet_id):
+def sheet_behaviors(sheet_id):
     if "email" not in session:
         return redirect(url_for("login"))
     email = session["email"]
@@ -429,8 +427,8 @@ def show_sheet(sheet_id):
         return redirect(url_for("login"))
 
     sheet = get_sheet_by_id(sheet_id)
-    
-    return render_template('show_sheet.html', sheet=sheet)
+
+    return render_template('sheet_behaviors.html', sheet=sheet, sheet_stats=sheet.sheet_stats)
 
 
 # NEW SHEET
@@ -469,6 +467,7 @@ def create_sheet():
     google_spreadsheet_id=request.form.get("google_spreadsheet_id")
     sheet_name=request.form.get("sheet_name")
     
+    # Add data to 'sheets' table
     try:
         sheet = create_new_sheet(
             user_id=user.id, 
@@ -486,7 +485,7 @@ def create_sheet():
 
     flash("Sheet added to SpreadsheetAPI") 
 
-    return redirect(url_for('show_sheet', sheet_id=sheet.id))    
+    return redirect(url_for('sheet_behaviors', sheet_id=sheet.id))    
 
 
 # LOGOUT
@@ -517,7 +516,7 @@ def auth_flow():
 
 
 
-# OAUTH CALLBACK FLOW (where my user will be redirected once they logged in to their google account)
+# OAUTH CALLBACK FLOW (where user will be redirected once they logged in to their google account)
 @app.route('/oauth_callback')
 def oauth_callback():
     # Verifying the authorization server response

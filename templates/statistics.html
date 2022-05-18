@@ -1,0 +1,38 @@
+<div class="card mt-3">
+    <div class="card-header">
+        <div class="d-flex align-items-center">
+            <h6>Total requests for each API call</h6>
+        </div>
+    </div>
+    <div class="card-body">
+        {% 
+            set stats = [
+                {'item_code':'get', 'requests': sheet_stats.get },
+                {'item_code':'post', 'requests': sheet_stats.post },
+                {'item_code':'update', 'requests': sheet_stats.put },
+                {'item_code':'delete', 'requests': sheet_stats.delete }
+            ]
+        %}
+        <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">&nbsp;</th>
+                <th scope="col">Requests</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in stats %}
+              <tr>
+                <th scope="row"><span class="badge badge-info mr-1">{{ item['item_code']|upper }}</span></th>
+                <td>{{ item['requests'] }}</td>
+              </tr>
+              {% endfor %}
+              <tr class="row_total">
+                <th>&nbsp;</th>
+                <td>{{ stats|sum(attribute="requests") }} total</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+  </div>
+  <h6>Total number of requests made across all projects: 0</h6>

@@ -22,9 +22,8 @@ class User(db.Model):
 
     # In order to establish one-to-one relationship we need to set up the uselist=False
     # When we load ApiCredentials object, the ApiCredentials.user attribute will refer to a single User object rather than a collection    
-    api_credentials = db.relationship("ApiCredentials", backref=backref("user", uselist=False))
+    api_credentials = db.relationship("ApiCredentials", backref=backref("user", uselist=False))    
     # api_credentials = db.relationship("ApiCredentials", backref="user", uselist=False)
-
 
     def __repr__(self):
         return f'<User id={self.id} api_credentials_id={self.api_credentials_id} registration_date={self.registration_date}>'
@@ -43,14 +42,14 @@ class Sheet(db.Model):
     num_rows = db.Column(db.Integer, nullable=False)
     num_columns = db.Column(db.Integer, nullable=False)
 
-    user = db.relationship("User", backref="sheets")
+    user = db.relationship("User", backref="sheets")    
 
     def __repr__(self):
         return f'<Sheet id={self.id} user_id={self.user_id}>'
 
 
 class ApiCredentials(db.Model):
-    """ Api Credentials """
+    """ API Credentials """
 
     __tablename__ = 'api_credentials'
 
@@ -65,6 +64,25 @@ class ApiCredentials(db.Model):
 
     def __repr__(self):
         return f'<ApiCredential id={self.id} token={self.token}>'  
+
+
+class SheetStats(db.Model):
+    """ Statistics for each API call """
+
+    __tablename__ = 'sheet_stats'
+
+    sheet_id = db.Column(db.Integer, db.ForeignKey('sheets.id'), primary_key=True, unique=True)
+    get = db.Column(db.Integer, nullable=False)
+    post = db.Column(db.Integer, nullable=False)
+    put = db.Column(db.Integer, nullable=False)
+    delete = db.Column(db.Integer, nullable=False)
+    # sheet_id = db.Column(db.Integer, db.ForeignKey('sheets.id'))
+
+    # sheet_stats = db.relationship("Sheet", backref=backref("sheet_stats", uselist=False))
+    sheet = db.relationship("Sheet", backref=backref("sheet_stats", uselist=False))
+
+    def __repr__(self):
+        return f'<SheetStats id={self.sheet_id} get={self.get} post={self.post} put={self.put} delete={self.delete}>'
 
 
 def init_app():
