@@ -11,7 +11,7 @@
                         <input type="text" class="form-control" id="SheetId" value="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-label="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-describedby="btnCopy">
                         <div class="input-group-append">
                           <button class="btn btn-primary" type="button" id="btnCopy" data-toggle="tooltip" data-placement="button"
-                          title="Copy to Clipboard">Copy</button>
+                          title="Copy to Clipboard" onclick="eventHandler()">Copy</button>
                         </div>
                     </div>            
                     <h6 class="card-title">Javascript Example</h6>
@@ -30,3 +30,19 @@
                 </div>
             </div>
             <!-- /GET (retrieve rows) -->
+            <script>
+                function eventHandler() {
+                    /* Get the text field */
+                    var copyText = document.getElementById("myInput");
+                
+                    /* Select the text field */
+                    copyText.select();
+                    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+                
+                    /* Copy the text inside the text field */
+                    navigator.clipboard.writeText(copyText.value);
+                
+                    /* Alert the copied text */
+                    alert("Copied the text: " + copyText.value);
+                }
+            </script>
