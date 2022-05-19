@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, session, redirect, flash, url
 from flask.json import jsonify
 from model import connect_to_db, db
 from datetime import datetime
-from crud import create_user, create_credentials, get_user_by_email, create_new_sheet, get_sheets_by_user, get_sheet_by_id, get_credentials_by_spreadsheet_id, update_sheet_stats_counter
+from crud import create_user, create_credentials, get_user_by_email, create_new_sheet, get_sheets_by_user, get_sheet_by_id, get_credentials_by_spreadsheet_id, update_sheet_stats_counter, delete_sheet_by_id, update_sheet_name
 import sqlalchemy
 import json
 
@@ -488,6 +488,46 @@ def create_sheet():
     return redirect(url_for('sheet_behaviors', sheet_id=sheet.id))    
 
 
+# DELETE SHEET
+@app.route('/delete_sheet/<sheet_id>', methods=['GET'])
+# @requires_auth
+def delete_sheet(sheet_id):
+    if "email" not in session:
+        return redirect(url_for("login"))
+
+    if not sheet_id:
+        return redirect(url_for('not_found'))
+
+    try:
+        delete_sheet_by_id(sheet_id)
+        flash("Spreadsheet was successfully deleted")
+    except AttributeError as e:
+        flash("ERROR")
+    
+    return redirect(url_for('dashboard'))
+
+
+# EDIT SHEET
+@app.route('/edit_sheet/<sheet_id>', methods=['POST'])
+def edit_sheet(sheet_id):
+    if "email" not in session:
+        return redirect(url_for("login"))
+
+    if not sheet_id:
+        return redirect(url_for('not_found'))
+
+    if request.method == 'POST':
+        sheet_name = request.form.get("sheet_name")
+
+    try:
+        update_sheet_name(sheet_id, sheet_name)
+        flash("The name for sheet was successfully updated")
+    except AttributeError as e:
+        flash("ERROR")
+
+    return redirect(url_for('dashboard'))
+
+
 # LOGOUT
 @app.route('/logout')
 def logout():
@@ -513,7 +553,6 @@ def auth_flow():
     # After an application obtains an access token, it sends the token to a Google API in an HTTP Authorization request header.
     authorization_url, _state = flow.authorization_url(access_type="offline")
     return redirect(authorization_url)
-
 
 
 # OAUTH CALLBACK FLOW (where user will be redirected once they logged in to their google account)

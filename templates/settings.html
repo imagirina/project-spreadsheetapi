@@ -1,34 +1,57 @@
 <div class="row">
-    <div class=""col-lg-6">
+    <div class="col">
         <div class="card mt-3">
             <div class="card-header">
                 <div class="d-flex align-items-center">
+                    <span class="badge badge-info mr-1 warning">WARNING</span>
                     <h6>Edit Spreadsheet</h6>
                 </div>
             </div>
             <div class="card-body">
-                <small class="text-muted">Warning: Changing the project name will also change your API URLs</small>
-                <form class="d-flex" action="/delete_spreadsheet">
-                    <input type="text" class="form-control ember-text-field ember-view"/>
-                    <button class="btn btn-primary mb-4" type="submit">Save Changes</button>
+                <form class="row g-3" action="/edit_sheet/{{ sheet.id }}" method="post">
+                    <input type="text" name="sheet_name" class="form-control" value="{{ sheet.sheet_name }}" />
+                    <small class="text-muted">Changing the sheet name will change your API URLs</small>
+                    <button class="btn btn-primary" type="submit">Save Changes</button>
                 </form>
             </div>
         </div>
     </div>
-    <div class=""col-lg-6">
+    <div class="col">
         <div class="card mt-3">
             <div class="card-header">
                 <div class="d-flex align-items-center">
                     <span class="badge badge-info mr-1 danger">DANGER</span>
-                    <h6>Delete Spreadsheet</h6>
+                    <h6>&nbsp;</h6>
                 </div>
             </div>
             <div class="card-body">
-                <p>Deleting this project will make its API unavailable immediately. This action cannot be undone.</p>
-                <form class="d-flex" action="/delete_spreadsheet">
-                    <button class="btn btn-danger" type="submit">Delete Spreadsheet</button>
+                <small>Deleting this project will make its API unavailable immediately. This action cannot be undone.</small>
+                <br /><br />
+                <form class="row g-3" action="/delete_sheet/{{ sheet.id }}">
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#dangerModal" type="submit">Delete Spreadsheet</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="dangerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="dangerModalLabel"><span class="badge badge-info mr-1 danger">DANGER</span>This action cannot be undone</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            Are you sure you want to delete this spreadsheet?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- /Modal -->

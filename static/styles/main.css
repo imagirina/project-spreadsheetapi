@@ -20,6 +20,7 @@ body div.content {
 .navbar>.container-fluid {
     padding-left: 0;
 }
+
 h3.display-6 {
     font-family: sans-serif;
     font-weight: bold;
@@ -34,6 +35,11 @@ h6 {
     background-color: #dc3545;
     margin-right: 8px;
 }
+.badge.badge-info.mr-1.warning {
+    background-color: #ffc107;
+    margin-right: 8px;
+}
+
 .badge.badge-info.mr-1 {
     background-color: #20c997;
     margin-right: 8px;
@@ -52,6 +58,13 @@ h6 {
 .btn-primary:hover {
     background-color: #00B779;
     border-color: #00B779;
+}
+
+.btn-primary:focus {
+    color: #fff;
+    background-color: #00B779;
+    border-color: #00B779;
+    box-shadow: none;
 }
 
 a, .nav-link {
@@ -106,9 +119,6 @@ a:hover, .nav-link:hover {
     font-weight: 500;
 }
 
-
-
-.col-lg-6 {
-    flex: 0 0 50%;
-    max-width: 50%;
+small.text-muted {
+    font-size: 0.8em;
 }

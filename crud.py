@@ -37,14 +37,14 @@ def create_new_sheet(user_id, google_spreadsheet_id, sheet_name, num_rows, num_c
     )
 
     # Add sheet id into sheet_stats table, set columns to 0
-    sheet_stats = SheetStats(
-        sheet_id = sheet.id,
+    sheet.sheet_stats = SheetStats(
+        # sheet_id = sheet.id,
         get = 0,
         post = 0,
         put = 0,
         delete = 0 
     )
-    db.session.add(sheet_stats)
+    db.session.add(sheet)
     db.session.commit()
 
     return sheet
@@ -81,6 +81,28 @@ def update_sheet_stats_counter(google_spreadsheet_id, method_name):
 
 #     return SheetStats.query.filter(SheetStats.sheet_id == id).first()
 #     # return SheetStats.query.get(id)
+
+def update_sheet_name(sheet_id, sheet_name):
+    """Update spreadsheet name"""
+
+    new_name = sheet_name
+    Sheet.query.\
+        filter((Sheet.id == sheet_id) | (Sheet.sheet_name == sheet_name)).\
+        update({Sheet.sheet_name: new_name})
+
+    db.session.commit()
+
+
+def delete_sheet_by_id(sheet_id):
+    """Delete sheet by sheet id"""
+
+    Sheet.query.where(Sheet.id == sheet_id).delete()
+    SheetStats.query.where(SheetStats.sheet_id == sheet_id).delete()
+
+    # Sheet.delete().where(Sheet.id == sheet_id)
+    # SheetStats.delete().where(SheetStats.sheet_id == sheet_id)
+    db.session.commit()
+
 
 def get_credentials_by_spreadsheet_id(google_spreadsheet_id):
     """Return API Credentials by Google Spreadsheet ID (string)"""

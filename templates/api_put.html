@@ -11,7 +11,7 @@
                         <input type="text" class="form-control" id="SheetId" value="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}/[Object ID]" aria-label="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-describedby="btnCopy">
                         <div class="input-group-append">
                           <button class="btn btn-primary" type="button" id="btnCopy" data-toggle="tooltip" data-placement="button"
-                          title="Copy to Clipboard">Copy</button>
+                          title="Copy to Clipboard" onclick="copyToClipboard(this)">Copy</button>
                         </div>
                     </div>            
                     <h6 class="card-title">Javascript Example</h6>
