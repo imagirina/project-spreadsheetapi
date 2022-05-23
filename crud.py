@@ -25,7 +25,7 @@ def create_credentials(token, refresh_token, token_uri, client_id, client_secret
 
     return api_credentials
 
-def create_new_sheet(user_id, google_spreadsheet_id, sheet_name, num_rows, num_columns):
+def create_new_sheet(user_id, google_spreadsheet_id, sheet_name, num_rows, num_columns, get_action_enabled, post_action_enabled, put_action_enabled, delete_action_enabled):
     """Create and return sheet"""
 
     sheet = Sheet(
@@ -34,6 +34,10 @@ def create_new_sheet(user_id, google_spreadsheet_id, sheet_name, num_rows, num_c
         sheet_name = sheet_name,
         num_rows = num_rows,
         num_columns = num_columns,
+        get_action_enabled = get_action_enabled,
+        post_action_enabled = post_action_enabled,
+        put_action_enabled = put_action_enabled,
+        delete_action_enabled = delete_action_enabled,
     )
 
     # Add sheet id into sheet_stats table, set columns to 0
@@ -63,6 +67,16 @@ def get_sheet_by_id(id):
     """Return sheet by sheet id"""
 
     return Sheet.query.filter(Sheet.id == id).first()
+
+def get_sheet_and_update_api_action(action_name, sheet_id):
+    """Update API action (True->False->True)"""
+
+    sheet = Sheet.query.filter(Sheet.id == sheet_id).first()
+    attr_name = f'{action_name}_action_enabled'
+    current_value = getattr(sheet, attr_name)
+    setattr(sheet, attr_name, not current_value)
+    db.session.commit()
+
 
 def update_sheet_stats_counter(google_spreadsheet_id, method_name):
     """ Update sheet_stats table (column that stores number of requests for each API call) """

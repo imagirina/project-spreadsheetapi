@@ -3,6 +3,7 @@
 // $(function() { ... }); is a jQuery short-hand for $(document).ready(function() {...});
 // Will be called once all the DOM elements on the page are ready to be used
 // Reference Error : we are trying to access a variable or call a function that has not been defined yet
+
 $(function() {
     // alert('I am in the $ function');
     // $('td').css('color', 'red'); 
@@ -15,19 +16,54 @@ $(function() {
     if (lastActiveTab !== null) {
         $(`button#${lastActiveTab}`).tab('show');
     }
+
+    $('#collapseExample').on('hide.bs.collapse', function () {
+        alert();
+    });
+
+
+    // Enabling/disabling switch accordeon
+    $('.form-check-input').on('change', function (event) {
+        if (event.target.checked) {
+            event.target.parentElement.parentElement.querySelector('.badge').classList.remove('disabled');
+            event.target.parentElement.querySelector('.form-check-label').innerText = "Enabled";
+        } else {
+            event.target.parentElement.parentElement.querySelector('.badge').classList.add('disabled');
+            event.target.parentElement.querySelector('.form-check-label').innerText = "Disabled";
+        }
+    });
+
+// Try sessionStorage (session last until the browser is closed, including reloads)
+
 });
 
-
-// function deleteSheet(btn) {
-//     console.log("My event handler")
-// }
-
-
+// https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
+// Obsolete but wider browser coverage, Clipboard API is not widespread yet
 function copyToClipboard(btn) {
     // console.log(btn.parentElement.parentElement.firstElementChild);
     btn.parentElement.parentElement.firstElementChild.select();
     document.execCommand('copy');
 }
+
+// Using JS to send AJAX request
+function updateApiAction(checkbox, sheet_id) {
+    let url = "http://localhost:5000/update_api_action"
+
+    const action_name = checkbox.getAttribute('api-action-name');
+
+    // fetch() is a built-in function for making network requests to a server
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({action_name: action_name, sheet_id: sheet_id})
+    })
+    // .then((response) => response.text())
+    // .then((responseData) => {
+    //     alert(responseData.status);
+    // })
+
+}
+
 
 // function copyToClipboard2(btn) {
 //     const textToClipboard = $(btn).parent().find('input[type=text]');

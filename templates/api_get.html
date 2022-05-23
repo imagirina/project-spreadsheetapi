@@ -1,19 +1,27 @@
-            <!-- GET (retrieve rows) -->
+        <!-- GET (retrieve rows) -->
+        <div class="accordion-item">
             <div class="card mt-3">
-                <div class="card-header">
+                <div class="card-header accordion-header">
                     <div class="d-flex align-items-center">
-                        <span class="badge badge-info mr-1">GET</span>
+                        <span class="badge badge-info mr-1 {% if not sheet.get_action_enabled %}disabled{% endif %}">GET</span>
                         <h6>Retrieve rows from your spreadsheet</h6>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" api-action-name="get" type="checkbox" role="switch" id="apiGetEnabled" data-toggle="toggle" data-bs-toggle="collapse" data-bs-target="#collapseGet" aria-expanded="true" aria-controls="collapseGet" {% if sheet.get_action_enabled %}checked{% endif %}  onclick="updateApiAction(this, '{{ sheet.id }}')">
+                            <label class="form-check-label" for="apiGetEnabled">
+                                {% if sheet.get_action_enabled %}Enabled{% else %}Disabled{% endif %}
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="input-group mb-3">
+                <div class="card-body accordion-collapse collapse {% if sheet.get_action_enabled %} show {% endif %}" id="collapseGet">
+                    <div class="input-group accordion-body mb-3">
                         <input type="text" class="form-control" id="SheetId" value="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-label="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-describedby="btnCopy">
                         <div class="input-group-append">
                           <button class="btn btn-primary" type="button" id="btnCopy" data-toggle="tooltip" data-placement="button"
                           title="Copy to Clipboard" onclick="copyToClipboard(this)">Copy</button>
                         </div>
-                    </div>            
+                    </div>
                     <h6 class="card-title">Javascript Example</h6>
                     <code class="card card-body bg-light">
                       <!--/{{ sheet.sheet_name|lower }}-->
@@ -29,4 +37,5 @@
                     </code>
                 </div>
             </div>
-            <!-- /GET (retrieve rows) -->
+        </div>
+        <!-- /GET (retrieve rows) -->

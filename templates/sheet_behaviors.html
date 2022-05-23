@@ -53,10 +53,12 @@
         <div class="tab-content" id="myTabContent">
           <!-- API TAB PANEL CONTAINER -->
           <div class="tab-pane fade show active" id="api" role="tabpanel" aria-labelledby="api-tab">
-            {% include "api_get.html" %}
-            {% include "api_post.html" %}
-            {% include "api_put.html" %}
-            {% include "api_delete.html" %}
+            <div class="accordion">
+              {% include "api_get.html" %}
+              {% include "api_post.html" %}
+              {% include "api_put.html" %}
+              {% include "api_delete.html" %}
+            </div>            
           </div>
           <!-- /API TAB PANEL CONTAINER -->
 

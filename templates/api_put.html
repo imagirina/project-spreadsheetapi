@@ -1,13 +1,21 @@
-            <!-- PUT (edit a row in your spreadsheet) -->
+        <!-- PUT (edit a row in your spreadsheet) -->
+        <div class="accordion-item">
             <div class="card mt-3">
-                <div class="card-header">
+                <div class="card-header accordion-header">
                     <div class="d-flex align-items-center">
-                        <span class="badge badge-info mr-1">PUT</span>
+                        <span class="badge badge-info mr-1 {% if not sheet.put_action_enabled %}disabled{% endif %}">PUT</span>
                         <h6>Update a row in your spreadsheet</h6>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" api-action-name="put" type="checkbox" role="switch" id="apiPutEnabled" data-toggle="toggle" data-bs-toggle="collapse" data-bs-target="#collapsePut" aria-expanded="false" aria-controls="collapseGet" {% if sheet.put_action_enabled %}checked{% endif %} onclick="updateApiAction(this, '{{ sheet.id }}')">
+                            <label class="form-check-label" for="apiPutEnabled">
+                                {% if sheet.put_action_enabled %}Enabled{% else %}Disabled{% endif %}
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="input-group mb-3">
+                <div class="card-body accordion-collapse collapse {% if sheet.put_action_enabled %} show {% endif %}" id="collapsePut">
+                    <div class="input-group accordion-body mb-3">
                         <input type="text" class="form-control" id="SheetId" value="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}/[Object ID]" aria-label="http://localhost:5000/api/sheets/{{ sheet.google_spreadsheet_id }}" aria-describedby="btnCopy">
                         <div class="input-group-append">
                           <button class="btn btn-primary" type="button" id="btnCopy" data-toggle="tooltip" data-placement="button"
@@ -35,5 +43,6 @@
                         </pre>
                     </code>
                 </div>
-              </div>
-              <!-- /PUT (edit a row in your spreadsheet) -->
+            </div>
+        </div>
+        <!-- /PUT (edit a row in your spreadsheet) -->

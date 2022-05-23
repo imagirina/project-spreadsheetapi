@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, session, redirect, flash, url
 from flask.json import jsonify
 from model import connect_to_db, db
 from datetime import datetime
-from crud import create_user, create_credentials, get_user_by_email, create_new_sheet, get_sheets_by_user, get_sheet_by_id, get_credentials_by_spreadsheet_id, update_sheet_stats_counter, delete_sheet_by_id, update_sheet_name
+from crud import create_user, create_credentials, get_user_by_email, create_new_sheet, get_sheets_by_user, get_sheet_by_id, get_credentials_by_spreadsheet_id, update_sheet_stats_counter, delete_sheet_by_id, update_sheet_name, get_sheet_and_update_api_action
 import sqlalchemy
 import json
 
@@ -448,6 +448,17 @@ def new_project():
     return render_template('new_sheet.html')
 
 
+# UPDATE API ACTION
+@app.route('/update_api_action', methods=['POST'])
+def update_api_action():
+    action_name = request.json.get("action_name")
+    sheet_id = request.json.get("sheet_id")
+
+    get_sheet_and_update_api_action(action_name, sheet_id)
+    return jsonify({ 'success': True })
+
+
+
 # CREATE SHEET
 @app.route('/create_sheet', methods=['POST'])
 def create_sheet():
@@ -475,6 +486,10 @@ def create_sheet():
             sheet_name=sheet_name,
             num_rows=4,
             num_columns=3,
+            get_action_enabled = True,
+            post_action_enabled = False,
+            put_action_enabled = False,
+            delete_action_enabled = False,
         )
         db.session.add(sheet)
         db.session.commit()

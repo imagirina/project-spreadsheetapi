@@ -31,6 +31,13 @@ h6 {
     margin: 8px 0;
 }
 
+
+.badge.badge-info.mr-1.disabled {
+    background-color: #F7F7F7;
+    color: #6E6E6E;
+    margin-right: 8px;
+    margin-top: 2px;
+}
 .badge.badge-info.mr-1.danger {
     background-color: #dc3545;
     margin-right: 8px;
@@ -70,7 +77,7 @@ h6 {
 a, .nav-link {
     color: #20c998;
 }
-a:hover, .nav-link:hover {
+a:hover, .nav-link:hover, .nav-link:focus {
     color: #00B779;
 }
 
@@ -122,3 +129,54 @@ a:hover, .nav-link:hover {
 small.text-muted {
     font-size: 0.8em;
 }
+
+/***********************/
+.accordion {
+    margin-bottom: 20px;
+}
+
+.accordion-body {
+    margin: 0;
+    padding: 0;
+}
+
+.accordion-item {
+    border: none;
+}
+
+.form-check {
+    position: relative;
+    z-index: 1;
+    display: block;
+    min-height: 1rem;
+    padding-left: 1.5rem;
+    margin-left: auto!important;
+    font-size: 0.85em;
+}
+
+.form-switch .form-check-input:focus {
+    border-color: rgba(0, 0, 0, 0.25);
+    outline: 0;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23BEBEBE'/></svg>");
+}
+.form-switch .form-check-input:checked {
+    background-color: #00B779;
+    border-color: #00B779;
+    border: none;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255,255,255,1.0)'/></svg>");
+}
+
+
+/* Icon when the collapsible content is shown */
+/* .btn:after {
+  font-family: "Glyphicons Halflings";
+  content: "\e114";
+  float: right;
+  margin-left: 15px;
+} */
+/* Icon when the collapsible content is hidden */
+/* .btn.collapsed:after {
+  content: "\e080";
+} */
+

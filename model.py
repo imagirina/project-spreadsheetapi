@@ -42,6 +42,11 @@ class Sheet(db.Model):
     num_rows = db.Column(db.Integer, nullable=False)
     num_columns = db.Column(db.Integer, nullable=False)
 
+    get_action_enabled = db.Column(db.Boolean, nullable=False)
+    post_action_enabled = db.Column(db.Boolean, nullable=False)
+    put_action_enabled = db.Column(db.Boolean, nullable=False)
+    delete_action_enabled = db.Column(db.Boolean, nullable=False)
+
     user = db.relationship("User", backref="sheets")    
 
     def __repr__(self):
