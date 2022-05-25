@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Spreadsheet API &mdash; Showcase{% endblock %}
+
+{% block menu %}
+<style>
+    body {
+        width: 100vw;
+        height: 100vh;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://unpkg.com/chart.js@3"></script>
+<script src="https://unpkg.com/chartjs-chart-geo@3"></script>
+<script src="https://unpkg.com/chartjs-plugin-datalabels@next"></script>
+
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+  <li class="nav-item">
+    <a class="nav-link" href="/showcases">Showcases</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/dashboard">Dashboard</a>
+  </li>
+</ul>
+{% endblock %}
+{% block navbar %}
+                {% if session['email'] %}
+                <form class="d-flex" action="/logout">                  
+                  <button class="btn btn-outline-success" type="submit">Log Out</button>
+                </form>                
+                {% endif %}
+{% endblock %}                
+
+{% block body %}
+
+<!-- 
+
+<!doctype html>
+<html>
+<head>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/chart.js@3"></script>
+    <script src="https://unpkg.com/chartjs-chart-geo@3"></script>
+    <script src="https://unpkg.com/chartjs-plugin-datalabels@next"></script>
+</head>
+<body> -->
+    <h3 class="display-6">Stores by state</h3>
+    <p class="card-text">Map style interface representing the data from spreadsheet</p>
+    <br />
+    <canvas id="canvas"></canvas>
+    <script>
+        'use strict';
+
+        // function getRandomColor() {
+        //     var letters = '0123456789ABCDEF'.split('');
+        //     var color = '#';
+        //     for (var i = 0; i < 6; i++ ) {
+        //         color += letters[Math.floor(Math.random() * 16)];
+        //     }
+        //     return color;
+        // }
+
+        $(function() {
+            Promise.all([
+                fetch('https://unpkg.com/us-atlas/states-10m.json')
+                    .then((r) => r.json()),
+                fetch('http://localhost:5000/api/sheets/13VH0tfDXOcPQ1mMihq7tLtGO8rY4cENsg3eC_InQGNQ')
+                    .then((r) => r.json())
+            ])
+            .then(([us, data]) => {
+                const states = ChartGeo.topojson.feature(us, us.objects.states).features;
+                // const dd = data.map((d) => Object.assign(d, {value: Math.round(Math.random() * 100)}));
+                const chart = new Chart(document.getElementById("canvas").getContext("2d"), {
+                    type: 'bubbleMap',
+                    data: {
+                        labels: data.map((d) => d['State']),
+                        datasets: [{
+                            outline: states,
+                            showOutline: true,
+                            pointHoverRadius: 25,
+                            backgroundColor: '#FF9999', //4070d8
+                            // pointBackgroundColor: "rgba(220,220,110,1)",
+                            // backgroundColor: getRandomColor(),
+                            // backgroundColor: ["red", "blue", "green", "blue", "red", "blue"],
+                            // fillColor: "rgba(220,220,220,0.5)", 
+                            // strokeColor: "rgba(220,220,220,0.8)", 
+                            // highlightFill: "rgba(220,220,220,0.75)",
+                            // highlightStroke: "rgba(220,220,220,1)",
+                            data: data.map((d) => Object.assign(d, { 
+                                value: parseInt(d['Total Stores']),
+                                longitude: d['Longitude'],
+                                latitude: d['Latitude']
+                            }))
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            datalabels: {
+                                align: 'top',
+                                formatter: (v) => {
+                                    return v.description;
+                                }
+                            }
+                        },
+                        scales: {
+                            xy: {
+                                projection: 'albersUsa', 
+                            },
+                            // the radius property, r is not scaled by the chart, it is the raw radius in pixels of the bubble that is drawn on the canvas
+                            r: {
+                                size: [1, 20],
+                            },
+                        },
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+<!-- </body>
+</html> -->

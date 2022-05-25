@@ -168,6 +168,23 @@ small.text-muted {
 }
 
 
+.card-img-top {
+    border-top-left-radius: calc(0.25rem - 1px);
+    border-top-right-radius: calc(0.25rem - 1px);
+}
+
+.card-text {
+    font-size: 0.85em;
+}
+
+.ember-view {
+    color: #000;
+    text-decoration: none;
+}
+.ember-view:hover {
+    color: #F1615A;
+}
+
 /* Icon when the collapsible content is shown */
 /* .btn:after {
   font-family: "Glyphicons Halflings";

@@ -78,17 +78,26 @@ def get_sheet_and_update_api_action(action_name, sheet_id):
     db.session.commit()
 
 
+def is_action_enabled(google_spreadsheet_id, action_name):
+    """ Checking if API action enabled (return True/False) """
+
+    sheet = Sheet.query.filter(Sheet.google_spreadsheet_id == google_spreadsheet_id).first()
+    column_name = f'{action_name}_action_enabled'
+    current_value = getattr(sheet, column_name)
+    print(f"{sheet.sheet_name} - {sheet.sheet_name} - {current_value}")
+    return current_value
+
+
 def update_sheet_stats_counter(google_spreadsheet_id, method_name):
     """ Update sheet_stats table (column that stores number of requests for each API call) """
 
     sheet = Sheet.query.filter(Sheet.google_spreadsheet_id == google_spreadsheet_id).first()
     setattr(sheet.sheet_stats, method_name, getattr(sheet.sheet_stats, method_name, 0) + 1)
-    db.session.commit()
-
     # db.session.query(SheetStats).\
     #            filter(SheetStats.sheet_id == sheet_id).\
     #            update({SheetStats.method_name: SheetStats.method_name + 1});
     # db.session.commit()
+    db.session.commit()
 
 # def get_stats_by_sheet_id(id):
 #     """ Return statistics by sheet id"""

@@ -2,11 +2,11 @@
 import os
 import os.path
 from click import get_app_dir
-from flask import Flask, render_template, request, session, redirect, flash, url_for
+from flask import Flask, render_template, request, session, redirect, flash, url_for, make_response
 from flask.json import jsonify
 from model import connect_to_db, db
 from datetime import datetime
-from crud import create_user, create_credentials, get_user_by_email, create_new_sheet, get_sheets_by_user, get_sheet_by_id, get_credentials_by_spreadsheet_id, update_sheet_stats_counter, delete_sheet_by_id, update_sheet_name, get_sheet_and_update_api_action
+from crud import create_user, create_credentials, get_user_by_email, create_new_sheet, get_sheets_by_user, get_sheet_by_id, get_credentials_by_spreadsheet_id, update_sheet_stats_counter, delete_sheet_by_id, update_sheet_name, get_sheet_and_update_api_action, is_action_enabled
 import sqlalchemy
 import json
 
@@ -34,6 +34,15 @@ def index():
 
     return render_template('index.html')
 
+
+# SHOWCASES
+@app.route('/showcases')
+def showcases():
+    return render_template('showcases.html')
+
+@app.route('/showcases/map')
+def showcases_map():
+    return render_template('map.html')
 
 # 404
 @app.errorhandler(404)
@@ -112,6 +121,7 @@ def dashboard():
     return render_template('dashboard.html', sheets=sheets)
 
 
+###### API calls for [GET] - show, [POST] - add, [PUT] - update, [DELETE] - delete ######
 # [DELETE] - API that deletes the row in the spreadsheet
 @app.route('/api/sheets/<google_spreadsheet_id>/<object_id>', methods=['DELETE'])
 def sheet_delete_row(google_spreadsheet_id, object_id):
@@ -139,6 +149,12 @@ def sheet_delete_row(google_spreadsheet_id, object_id):
     # Entry point for all API calls (API is inabled)
     service = build("sheets", "v4", credentials=credentials)
     sheets = service.spreadsheets() # <googleapiclient.discovery.Resource object at 0x110c88070>
+
+    # Checking if API action enabled
+    if not is_action_enabled(google_spreadsheet_id, 'delete'):
+        return jsonify({
+            'message': "Access forbidden"
+        }), 403
 
     update_sheet_stats_counter(google_spreadsheet_id, 'delete')
 
@@ -201,6 +217,12 @@ def sheet_update_row(google_spreadsheet_id, object_id):
     # Entry point for all API calls
     service = build("sheets", "v4", credentials=credentials)
     sheets = service.spreadsheets()
+
+    # Checking if API action enabled
+    if not is_action_enabled(google_spreadsheet_id, 'put'):
+        return jsonify({
+            'message': "Access forbidden"
+        }), 403
 
     update_sheet_stats_counter(google_spreadsheet_id, 'put')
 
@@ -289,6 +311,12 @@ def sheet_add_row(google_spreadsheet_id):
     service = build("sheets", "v4", credentials=credentials)
     sheets = service.spreadsheets()
 
+    # Checking if API action enabled
+    if not is_action_enabled(google_spreadsheet_id, 'post'):
+        return jsonify({
+            'message': "Access forbidden"
+        }), 403
+
     update_sheet_stats_counter(google_spreadsheet_id, 'post')
 
     columns_info = (
@@ -347,7 +375,6 @@ def sheet_add_row(google_spreadsheet_id):
     return jsonify(json_row)
 
 
-
 # [GET] - API that reads data from spreadsheet and returns JSON
 @app.route('/api/sheets/<google_spreadsheet_id>', methods=['GET'])
 def sheet_read_all(google_spreadsheet_id):
@@ -375,6 +402,11 @@ def sheet_read_all(google_spreadsheet_id):
     service = build("sheets", "v4", credentials=credentials)
     sheets = service.spreadsheets()
 
+    # Checking if API action enabled
+    if not is_action_enabled(google_spreadsheet_id, 'get'):
+        return jsonify({
+            'message': "Access forbidden"
+        }), 403
 
     update_sheet_stats_counter(google_spreadsheet_id, 'get')
 
@@ -397,23 +429,15 @@ def sheet_read_all(google_spreadsheet_id):
         row_dict = { 'id': row_idx + 2 }
         # for each column name add a value from the current row under the column's index
         for column_idx, column in enumerate(columns):
-            row_dict[column] = row[column_idx]
+            try:
+                row_dict[column] = row[column_idx]
+            except IndexError:
+                row_dict[column] = None
         result.append(row_dict)
 
-    # result = [
-    #     {
-    #         'Name': 'John', 
-    #         'Email': 'john@gmail.com', 
-    #         'Can Attend': 'TRUE',
-    #     },
-    #     {
-    #         'Name': 'Sam', 
-    #         'Email': 'sam@gmail.com', 
-    #         'Can Attend': 'FALSE',
-    #     },
-    # ]
-
-    return jsonify(result)
+    response = make_response(jsonify(result))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 
 # SHOW SHEET's BEHAVIOR
@@ -448,7 +472,7 @@ def new_project():
     return render_template('new_sheet.html')
 
 
-# UPDATE API ACTION
+# UPDATE API ACTION (AJAX from JS)
 @app.route('/update_api_action', methods=['POST'])
 def update_api_action():
     action_name = request.json.get("action_name")
@@ -456,7 +480,6 @@ def update_api_action():
 
     get_sheet_and_update_api_action(action_name, sheet_id)
     return jsonify({ 'success': True })
-
 
 
 # CREATE SHEET
@@ -617,12 +640,12 @@ def oauth_callback():
     return redirect("/new")
 
 
-# Google Cloud Platform requirements
+# Google Cloud Platform requirement
 @app.route("/privacy_policy")
 def privacy_policy():
     return "<p>Privacy Policy goes here</p>"
 
-
+# Google Cloud Platform requirement
 @app.route("/tos")
 def tos():
     return "<p>Terms Of Service goes here</p>"

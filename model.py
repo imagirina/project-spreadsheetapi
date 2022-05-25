@@ -49,6 +49,7 @@ class Sheet(db.Model):
 
     user = db.relationship("User", backref="sheets")    
 
+    """Debugging-friendly representation"""
     def __repr__(self):
         return f'<Sheet id={self.id} user_id={self.user_id}>'
 

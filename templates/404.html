@@ -5,7 +5,7 @@
 {% block menu %}
 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
   <li class="nav-item">
-    <a class="nav-link" href="#">Gallery</a>
+    <a class="nav-link" href="/showcases">Showcases</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="/dashboard">Dashboard</a>
@@ -29,7 +29,7 @@
                 Well, it's a bummer, it looks like something has gone wrong. Maybe internet is broken or something...
                 If the issue persists please contact us.
             </p>
-            <p><a href="{{ url_for('index') }}">Click Here</a>To go to the Home Page</p>
+            <p>Go to the <a href="{{ url_for('index') }}">Home Page</a></p>
           </div>
     </div>
 {% endblock %}
