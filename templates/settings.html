@@ -10,7 +10,6 @@
             <div class="card-body">
                 <form class="row g-3" action="/edit_sheet/{{ sheet.id }}" method="post">
                     <input type="text" name="sheet_name" class="form-control" value="{{ sheet.sheet_name }}" />
-                    <small class="text-muted">Changing the sheet name will change your API URLs</small>
                     <button class="btn btn-primary" type="submit">Save Changes</button>
                 </form>
             </div>

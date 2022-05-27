@@ -1,3 +1,8 @@
+body {
+    /* background-color: #EEFFFD; */
+    
+}
+
 body div.content {
     margin-top: 2em;
 }
@@ -80,6 +85,12 @@ a, .nav-link {
 a:hover, .nav-link:hover, .nav-link:focus {
     color: #00B779;
 }
+/* .nav {
+    
+    --bs-link-color: color: #00B779;
+    --bs-nav-link-color: color: #00B779;
+    --bs-nav-link-hover-color: color: #00B779;
+} */
 
 .card-body pre {
     margin-bottom: 0;    
@@ -177,12 +188,32 @@ small.text-muted {
     font-size: 0.85em;
 }
 
-.ember-view {
+/* .ember-view {
     color: #000;
-    text-decoration: none;
 }
 .ember-view:hover {
     color: #F1615A;
+} */
+
+.schedule-font {
+    font-size: 0.85em;
+}
+.schedule-font span {
+    font-weight: normal;
+}
+
+.img-round, .img-rel-round {
+    border-radius: 50%;
+}
+.wpx_small, .wpx-after:after {
+    width: 40px;
+}
+.mgb-10, .mgb-10-all > * {
+    margin-bottom: 10px;
+}
+
+.text-small {
+    font-size: 0.85em;
 }
 
 /* Icon when the collapsible content is shown */
@@ -197,3 +228,52 @@ small.text-muted {
   content: "\e080";
 } */
 
+
+/* SHOWCASE STUDIO */
+
+#showcase_studio {
+    /* background-image: url('static/img/showcases/bg_schedule.png'); */
+    background-image: url(/static/img/showcases/bg_schedule.png);
+    background-repeat: no-repeat;
+    /* transform: scaleX(-1); */
+    border: 1px solid #DEE2E6;
+    padding: 20px 20px 0 20px;
+}
+
+.showcase-text {
+    padding: 10px;
+    text-align: left;
+}
+span.showcase-instructors-title {
+    color: #4f7770;
+    font-weight: bold;
+    font-size: 1.2em;
+    border: 1px solid red;
+}
+
+.showcase-instructors-btn {
+    box-shadow: 0px 10px 25px rgba(242, 185, 182,100); 
+    -moz-box-shadow: 0px 10px 25px rgba(242, 185, 182,100); 
+    -webkit-box-shadow: 0px 10px 25px rgba(242, 185, 182,100); 
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0px;
+    color: #ffffff;
+    padding: 11px 35px 18px 35px;
+    text-transform: none;
+    border-radius: 29px;
+    -moz-border-radius: 29px;
+    -webkit-border-radius: 29px;
+    background: #f1615a;
+    float: right;
+    margin: 30px 20px 0 0;
+}
+
+.showcase-instructors-btn:hover {
+    color: #fff;
+    background: #ef4a42;
+}
+
+.py-5 {
+    padding-top: 1rem!important;
+}

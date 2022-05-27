@@ -42,7 +42,25 @@ def showcases():
 
 @app.route('/showcases/map')
 def showcases_map():
-    return render_template('map.html')
+    return render_template('showcase_map.html')
+
+@app.route('/showcases/studio')
+def showcases_studio():
+    return render_template('showcase_studio.html')
+
+
+@app.route('/showcases/manage')
+def manage():
+    return render_template('showcase_manage.html')
+
+@app.route('/showcases/studio/edit')
+def showcases_studio_edit_schedule():
+    return render_template('showcase_edit_schedule.html')
+
+
+@app.route('/showcases/studio/add')
+def showcase_add_to_schedule():
+    return render_template('showcase_add_to_schedule.html')
 
 # 404
 @app.errorhandler(404)

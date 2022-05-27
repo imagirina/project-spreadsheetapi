@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Spreadsheet API &mdash; Showcase{% endblock %}
+
+{% block menu %}
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+  <li class="nav-item">
+    <a class="nav-link" href="/showcases">Showcases</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/dashboard">Dashboard</a>
+  </li>
+</ul>
+{% endblock %}
+{% block navbar %}
+                {% if session['email'] %}
+                <form class="d-flex" action="/logout">                  
+                  <button class="btn btn-outline-success" type="submit">Log Out</button>
+                </form>                
+                {% endif %}
+{% endblock %}                
+
+{% block body %}
+<h3 class="display-6">Yoga Studio</h3>
+<p class="card-text">Sample website for yoga studio with CMS-like capabilities based on the spreadsheet data</p>
+<div class="row">
+    <div class="col-md">
+      <a href="/showcases/studio">Back to Showcase</a>
+    </div>
+ </div><br />
+
+<div class="row">
+    <div class="col">
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <h6>Update &ldquo;About the Studio&rdquo; </h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <form class="row g-3" action="#" method="post">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <small class="text-muted">The text will be changed on your website</small>
+                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <h6>Update &ldquo;Contact&ldquo; Information</h6>
+                </div>
+            </div>
+            <div class="card-body">
+                <form class="row g-3" action="#" method="post">
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <small class="text-muted">The text will be changed on your website</small>
+                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br />
+<div class="table-responsive container col-xxl-8 px-4 py-5">
+    <h2 class="display-6">05/30 &ndash; 06/06&nbsp;<a href="#"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a></h2>
+    <p>Weekly schedule for Meditation and Vinyasa Yoga at Palo Alto, CA</p>
+    <form class="d-flex" action="/showcases/studio/add">
+        <button class="btn btn-outline-success" type="submit">Add to schedule</button>
+      </form>
+    <table class="table text-center schedule-font">
+      <thead>
+        <tr>
+          <th style="width: 20%;"></th>
+          <th style="width: 30%;">&nbsp;</th>
+          <th style="width: 19%;">&nbsp;</th>
+          <th style="width: 26%;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row" colspan="4" class="text-start">Monday</th>
+        </tr>
+        <tr>
+          <th scope="row"><span>6:00am &ndash; 7:30am (PDT)</span></th>
+          <td>The Smart Flow Yoga</td>
+          <td><img src="/static/img/avatar.png" class="wpx_small img-round mgb-10"></td>
+          <td class="text-small"><a href="/showcases/studio/edit"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a>&nbsp;<a href="#"><img src="/static/img/showcases/delete.png" width="30" height="30" class="mb-3" width="120" /></a></a></td>
+        </tr>
+        <tr>
+            <th scope="row" colspan="4" class="text-start">Tuesday</th>
+          </tr>
+        <tr>
+            <th scope="row"><span>6:00am &ndash; 7:30am (PDT)</span></th>
+            <td>Vinyasa Krama</td>
+            <td><!--<img src="static/avatar.png" class="wpx_small img-round mgb-10" title="" data-edit="false" data-editor="field">--><span>Brenda Robertson</span></td>
+            <td class="text-small"><a href="#"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a>&nbsp;<a href="#"><img src="/static/img/showcases/delete.png" width="30" height="30" class="mb-3" width="120" /></a></td>
+        </tr>
+        <tr>
+            <th scope="row" colspan="4" class="text-start">Wednesday</th>
+          </tr>
+        <tr>
+          <th scope="row"><span>6:00am &ndash; 7:30am (PDT)</span></th>
+          <td>Yoga For Better Sleep</td>
+          <td><span>Mildred Reed</span></td>
+          <td class="text-small"><a href="#"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a>&nbsp;<a href="#"><img src="/static/img/showcases/delete.png" width="30" height="30" class="mb-3" width="120" /></a></td>
+        </tr>
+        <tr>
+          <th scope="row" colspan="4" class="text-start">Thursday</th>
+        </tr>
+      <tr>
+        <th scope="row"><span>6:00am &ndash; 7:00am (PDT)</span></th>
+        <td>Yoga Flow</td>
+        <td><span>Irma Dow</span></td>
+        <td class="text-small"><a href="#"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a>&nbsp;<a href="#"><img src="/static/img/showcases/delete.png" width="30" height="30" class="mb-3" width="120" /></a></td>
+      </tr>
+      <tr>
+        <th scope="row" colspan="4" class="text-start">Friday</th>
+      </tr>
+      <tr>
+          <th scope="row"><span>5:00am &ndash; 6:00am (PDT)</span></th>
+          <td>Self Care Through Ayurveda</td>
+          <td><img src="/static/img/avatar.png" class="wpx_small img-round mgb-10"></td>
+          <td class="text-small"><a href="#"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a>&nbsp;<a href="#"><img src="/static/img/showcases/delete.png" width="30" height="30" class="mb-3" width="120" /></a></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+    <!-- DELETE (delete a row in your spreadsheet) -->
+    <!-- <div class="accordion">
+        <div class="accordion-item">
+            <div class="card mt-3">
+                <div class="card-header accordion-header">
+                    <div class="d-flex align-items-center">
+                        <h6>Delete a row in your spreadsheet</h6>
+                    </div>
+                </div>
+                <div class="card-body accordion-collapse collapse show" id="collapseDelete">
+                    <div class="input-group accordion-body mb-3">
+                        <div class="input-group-append">
+                          test
+                        </div>
+                    </div>
+                    <h6 class="card-title">Javascript Example</h6>
+
+                </div>
+            </div>
+        </div>
+    </div>     -->
+    <!-- /DELETE (delete a row in your spreadsheet) -->
+
+{% endblock %}
