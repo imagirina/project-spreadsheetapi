@@ -14,9 +14,9 @@
 {% endblock %}
 {% block navbar %}
                 {% if session['email'] %}
-                <form class="d-flex" action="/logout">                  
+                <form class="d-flex" action="/logout">
                   <button class="btn btn-outline-success" type="submit">Log Out</button>
-                </form>                
+                </form>
                 {% endif %}
 {% endblock %}
 
@@ -42,5 +42,4 @@
         </div>
       </div>
     </div>
-
 {% endblock %}

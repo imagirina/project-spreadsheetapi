@@ -14,11 +14,11 @@
 {% endblock %}
 {% block navbar %}
                 {% if session['email'] %}
-                <form class="d-flex" action="/logout">                  
+                <form class="d-flex" action="/logout">
                   <button class="btn btn-outline-success" type="submit">Log Out</button>
-                </form>                
+                </form>
                 {% endif %}
-{% endblock %}                
+{% endblock %}
 
 {% block body %}
 <h3 class="display-6">Yoga Studio</h3>
@@ -29,19 +29,67 @@
     </div>
  </div><br />
 
+ <script>
+  'use strict';
+  $(function() {
+    let url = 'http://localhost:5000/api/sheets/1-Z-kDYHlpt_vRfaScTJ-WzCR6DPkuLRuumSISpBSzvI';
+    fetch(url)
+        .then((response) => response.json())
+        .then(json => {
+            json.forEach(el => {
+              if (el['Title'] == "About") {
+                document.getElementById("title-about").innerHTML = el["Title"];
+                document.getElementById("text-about").value = el["Text"];
+              }
+              else if (el['Title'] == "Contacts") {
+                document.getElementById("title-contacts").innerHTML = el["Title"];
+                document.getElementById("text-contacts").value = el["Text"];
+              }
+            });
+        });
+
+    let url_get_schedule = 'http://localhost:5000/api/sheets/1M4SwxMxOGsJSh_FIZBxktitoQhM2xrbRgQQszrriD1M'
+    fetch(url_get_schedule)
+      .then((response) => response.json())
+      .then(json => {
+        json.forEach(el => {
+          const schedule_data = document.getElementById('template');
+          const clone = schedule_data.cloneNode(true);
+          const trs = clone.querySelectorAll('tr');
+
+          trs[0].querySelector("#week-day").innerHTML = el['Day'];
+          jQuery("#schedule-elements").append(trs[0]);
+          trs[1].querySelector(".time").innerHTML = el['Time'];
+          trs[1].querySelector(".class-name").innerHTML = el['Class Name'];
+          trs[1].querySelector('.edit-item').setAttribute('href', `/showcases/studio/edit?id=${el['id']}`);
+
+          trs[1].querySelector('.delete-item').setAttribute('onclick', `deleteItem(${el['id']})`);
+
+          if (el['Teacher'] == null) {
+            trs[1].querySelector(".teacher").innerHTML = '<img src="/static/img/avatar.png" class="wpx_small img-round mgb-10">';
+          }
+          else {
+            trs[1].querySelector(".teacher").innerHTML = el['Teacher'];
+          }
+          jQuery("#schedule-elements").append(trs[1]);
+        })
+      });
+  })
+</script>
+
 <div class="row">
     <div class="col">
         <div class="card mt-3">
             <div class="card-header">
                 <div class="d-flex align-items-center">
-                    <h6>Update &ldquo;About the Studio&rdquo; </h6>
+                  Update &ldquo;<h6 id="title-about">About</h6>&rdquo;
                 </div>
             </div>
             <div class="card-body">
-                <form class="row g-3" action="#" method="post">
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <form class="row g-3" id="about_form" method="Post" onsubmit="event.preventDefault();">
+                    <textarea class="form-control" rows="3" id="text-about">&nbsp;</textarea>
                     <small class="text-muted">The text will be changed on your website</small>
-                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                    <button class="btn btn-primary" type="submit" onclick="updateCategory(2)";>Save Changes</button>
                 </form>
             </div>
         </div>
@@ -50,28 +98,26 @@
         <div class="card mt-3">
             <div class="card-header">
                 <div class="d-flex align-items-center">
-                    <h6>Update &ldquo;Contact&ldquo; Information</h6>
+                  Update &ldquo;<h6 id="title-contacts">Contact</h6>&rdquo;
                 </div>
             </div>
             <div class="card-body">
-                <form class="row g-3" action="#" method="post">
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <form class="row g-3" id="contacts_form" method="Post" onsubmit="event.preventDefault();">
+                    <textarea class="form-control" rows="3" id="text-contacts">&nbsp;</textarea>
                     <small class="text-muted">The text will be changed on your website</small>
-                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                    <button class="btn btn-primary" type="submit" onclick="updateCategory(3)";>Save Changes</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-
-<br />
+<br /><br />
 <div class="table-responsive container col-xxl-8 px-4 py-5">
-    <h2 class="display-6">05/30 &ndash; 06/06&nbsp;<a href="#"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a></h2>
+    <h2 class="display-6">05/30 &ndash; 06/06</h2>
     <p>Weekly schedule for Meditation and Vinyasa Yoga at Palo Alto, CA</p>
     <form class="d-flex" action="/showcases/studio/add">
         <button class="btn btn-outline-success" type="submit">Add to schedule</button>
-      </form>
+    </form>
     <table class="table text-center schedule-font">
       <thead>
         <tr>
@@ -81,77 +127,31 @@
           <th style="width: 26%;"></th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <th scope="row" colspan="4" class="text-start">Monday</th>
-        </tr>
-        <tr>
-          <th scope="row"><span>6:00am &ndash; 7:30am (PDT)</span></th>
-          <td>The Smart Flow Yoga</td>
-          <td><img src="/static/img/avatar.png" class="wpx_small img-round mgb-10"></td>
-          <td class="text-small"><a href="/showcases/studio/edit"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a>&nbsp;<a href="#"><img src="/static/img/showcases/delete.png" width="30" height="30" class="mb-3" width="120" /></a></a></td>
-        </tr>
-        <tr>
-            <th scope="row" colspan="4" class="text-start">Tuesday</th>
-          </tr>
-        <tr>
-            <th scope="row"><span>6:00am &ndash; 7:30am (PDT)</span></th>
-            <td>Vinyasa Krama</td>
-            <td><!--<img src="static/avatar.png" class="wpx_small img-round mgb-10" title="" data-edit="false" data-editor="field">--><span>Brenda Robertson</span></td>
-            <td class="text-small"><a href="#"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a>&nbsp;<a href="#"><img src="/static/img/showcases/delete.png" width="30" height="30" class="mb-3" width="120" /></a></td>
-        </tr>
-        <tr>
-            <th scope="row" colspan="4" class="text-start">Wednesday</th>
-          </tr>
-        <tr>
-          <th scope="row"><span>6:00am &ndash; 7:30am (PDT)</span></th>
-          <td>Yoga For Better Sleep</td>
-          <td><span>Mildred Reed</span></td>
-          <td class="text-small"><a href="#"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a>&nbsp;<a href="#"><img src="/static/img/showcases/delete.png" width="30" height="30" class="mb-3" width="120" /></a></td>
-        </tr>
-        <tr>
-          <th scope="row" colspan="4" class="text-start">Thursday</th>
-        </tr>
-      <tr>
-        <th scope="row"><span>6:00am &ndash; 7:00am (PDT)</span></th>
-        <td>Yoga Flow</td>
-        <td><span>Irma Dow</span></td>
-        <td class="text-small"><a href="#"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a>&nbsp;<a href="#"><img src="/static/img/showcases/delete.png" width="30" height="30" class="mb-3" width="120" /></a></td>
-      </tr>
-      <tr>
-        <th scope="row" colspan="4" class="text-start">Friday</th>
-      </tr>
-      <tr>
-          <th scope="row"><span>5:00am &ndash; 6:00am (PDT)</span></th>
-          <td>Self Care Through Ayurveda</td>
-          <td><img src="/static/img/avatar.png" class="wpx_small img-round mgb-10"></td>
-          <td class="text-small"><a href="#"><img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" /></a>&nbsp;<a href="#"><img src="/static/img/showcases/delete.png" width="30" height="30" class="mb-3" width="120" /></a></td>
-      </tr>
+      <tbody id="schedule-elements">
+        &nbsp;
       </tbody>
     </table>
   </div>
 
-    <!-- DELETE (delete a row in your spreadsheet) -->
-    <!-- <div class="accordion">
-        <div class="accordion-item">
-            <div class="card mt-3">
-                <div class="card-header accordion-header">
-                    <div class="d-flex align-items-center">
-                        <h6>Delete a row in your spreadsheet</h6>
-                    </div>
-                </div>
-                <div class="card-body accordion-collapse collapse show" id="collapseDelete">
-                    <div class="input-group accordion-body mb-3">
-                        <div class="input-group-append">
-                          test
-                        </div>
-                    </div>
-                    <h6 class="card-title">Javascript Example</h6>
-
-                </div>
-            </div>
-        </div>
-    </div>     -->
-    <!-- /DELETE (delete a row in your spreadsheet) -->
+  <table id="template" style="visibility: hidden;">
+    <tbody>
+      <tr>
+          <th scope="row" colspan="4" class="text-start" id="week-day">Tuesday</th>
+      </tr>
+      <tr>
+          <td class="time"><span>6:00am &ndash; 7:30am (PDT)</span></td>
+          <td class="class-name">Vinyasa Krama</td>
+          <td><span class="teacher">Brenda Robertson</span></td>
+          <td class="text-small">
+            <a class="edit-item" href="/showcases/studio/edit/">
+              <img src="/static/img/showcases/edit.png" width="30" height="30" class="mb-3" width="120" />
+            </a>&nbsp;
+            <a class="delete-item" href="#" onclick="deleteItem(); return false;">
+              <img src="/static/img/showcases/delete.png" width="30" height="30" class="mb-3" width="120" />
+            </a>
+          </td>
+      </tr>
+    </tbody>
+  </table>
 
 {% endblock %}

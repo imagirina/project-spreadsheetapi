@@ -14,11 +14,11 @@
 {% endblock %}
 {% block navbar %}
                 {% if session['email'] %}
-                <form class="d-flex" action="/logout">                  
+                <form class="d-flex" action="/logout">
                   <button class="btn btn-outline-success" type="submit">Log Out</button>
-                </form>                
+                </form>
                 {% endif %}
-{% endblock %}                
+{% endblock %}
 
 {% block body %}
 <h3 class="display-6">Yoga Studio</h3>
@@ -29,6 +29,38 @@
     </div>
  </div><br />
 
+ <script>
+  'use strict';
+  $(function() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const itemId = urlParams.get('id');
+    
+    let url = 'http://localhost:5000/api/sheets/1M4SwxMxOGsJSh_FIZBxktitoQhM2xrbRgQQszrriD1M';
+    fetch(url)
+        .then((response) => response.json())
+        .then(json => {
+            json.forEach(el => {
+              if (el['id'] == itemId) {
+                document.getElementById("week-day").innerHTML = el["Day"];
+                document.querySelector(".time").value = el["Time"];
+                document.querySelector(".class-name").value = el["Class Name"];
+                document.querySelector(".teacher").value = el["Teacher"];
+              }
+            });
+        });
+
+    let url_update = `http://localhost:5000/api/sheets/1M4SwxMxOGsJSh_FIZBxktitoQhM2xrbRgQQszrriD1M/${itemId}`;
+
+    let week_day = document.getElementById("week-day").innerHTML;
+    let time = document.querySelector(".time").value;
+    let class_name = document.querySelector(".class-name").value;
+    let teacher = document.querySelector(".teacher").value;
+
+    document.getElementById('btn-update').setAttribute('onclick', `updateSchedule(${itemId})`);
+  })
+</script>
+
  <div class="row">
     <div class="col-3">
       &nbsp;
@@ -37,24 +69,24 @@
         <div class="card mt-3">
             <div class="card-header">
                 <div class="d-flex align-items-center">
-                    <h6>Monday</h6>
+                    <h6 id="week-day">Monday</h6>
                 </div>
             </div>
             <div class="card-body">
-                <form class="row g-3" id="schedule_form" action="#" method="Post">
+                <form class="row g-3" id="schedule_form" onsubmit="event.preventDefault();" method="Post">
                     <div class="mb-3">
                         <label for="time" class="form-label">Time</label>
-                        <input type="text" class="form-control" name="time">
+                        <input type="text" class="form-control time" name="time">
                     </div>
                     <div class="mb-3">
                         <label for="class_name" class="form-label">Class</label>
-                        <input type="text" class="form-control" name="class_name">
+                        <input type="text" class="form-control class-name" name="class_name">
                     </div>
                     <div class="mb-3">
                         <label for="teacher" class="form-label">Teacher</label>
-                        <input type="text" class="form-control" name="teacher">
+                        <input type="text" class="form-control teacher" name="teacher">
                     </div>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" id="btn-update" class="btn btn-primary" onclick="updateSchedule()">Update</button>
                 </form>
             </div>
         </div>

@@ -25,31 +25,13 @@
 {% endblock %}
 {% block navbar %}
                 {% if session['email'] %}
-                <form class="d-flex" action="/logout">                  
+                <form class="d-flex" action="/logout">
                   <button class="btn btn-outline-success" type="submit">Log Out</button>
-                </form>                
+                </form>
                 {% endif %}
-{% endblock %}                
+{% endblock %}
 
 {% block body %}
-
-<!-- 
-
-<!doctype html>
-<html>
-<head>
-    <style>
-        body {
-            width: 100vw;
-            height: 100vh;
-        }
-    </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://unpkg.com/chart.js@3"></script>
-    <script src="https://unpkg.com/chartjs-chart-geo@3"></script>
-    <script src="https://unpkg.com/chartjs-plugin-datalabels@next"></script>
-</head>
-<body> -->
     <h3 class="display-6">Stores by state</h3>
     <p class="card-text">Map style interface representing the data from spreadsheet</p>
     <br />
@@ -84,14 +66,7 @@
                             outline: states,
                             showOutline: true,
                             pointHoverRadius: 25,
-                            backgroundColor: '#FF9999', //4070d8
-                            // pointBackgroundColor: "rgba(220,220,110,1)",
-                            // backgroundColor: getRandomColor(),
-                            // backgroundColor: ["red", "blue", "green", "blue", "red", "blue"],
-                            // fillColor: "rgba(220,220,220,0.5)", 
-                            // strokeColor: "rgba(220,220,220,0.8)", 
-                            // highlightFill: "rgba(220,220,220,0.75)",
-                            // highlightStroke: "rgba(220,220,220,1)",
+                            backgroundColor: '#FF9999',
                             data: data.map((d) => Object.assign(d, { 
                                 value: parseInt(d['Total Stores']),
                                 longitude: d['Longitude'],
@@ -126,5 +101,3 @@
         });
     </script>
 {% endblock %}
-<!-- </body>
-</html> -->

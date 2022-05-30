@@ -25,11 +25,11 @@
 {% endblock %}
 {% block navbar %}
                 {% if session['email'] %}
-                <form class="d-flex" action="/logout">                  
+                <form class="d-flex" action="/logout">
                   <button class="btn btn-outline-success" type="submit">Log Out</button>
-                </form>                
+                </form>
                 {% endif %}
-{% endblock %}                
+{% endblock %}
 
 {% block body %}
   <h3 class="display-6">Yoga Studio</h3>
@@ -38,8 +38,49 @@
     <button class="btn btn-primary" type="submit">Manage</button>
   </form><br />
 
+  <script>
+    'use strict';
+    $(function() {
+      let url = 'http://localhost:5000/api/sheets/1-Z-kDYHlpt_vRfaScTJ-WzCR6DPkuLRuumSISpBSzvI';
+      fetch(url)
+          .then((response) => response.json())
+          .then(json => {
+              json.forEach(el => {
+                if (el['Title'] == "About") {
+                  document.getElementById("title-about").innerHTML = el["Title"];
+                  document.getElementById("text-about").innerHTML = el["Text"];
+                }
+                else if (el['Title'] == "Contacts") {
+                  document.getElementById("title-contacts").innerHTML = el["Title"];
+                  document.getElementById("text-contacts").innerHTML = el["Text"];
+                }
+              });
+          });
+      let url_get_schedule = 'http://localhost:5000/api/sheets/1M4SwxMxOGsJSh_FIZBxktitoQhM2xrbRgQQszrriD1M'
+      fetch(url_get_schedule)
+        .then((response) => response.json())
+        .then(json => {
+          json.forEach(el => {
+            const schedule_data = document.getElementById('template');
+            const clone = schedule_data.cloneNode(true);
+            const trs = clone.querySelectorAll('tr');
+            trs[0].querySelector("#week-day").innerHTML = el['Day'];
+            jQuery("#schedule-elements").append(trs[0]);
+            trs[1].querySelector("#time").innerHTML = el['Time'];
+            trs[1].querySelector("#class-name").innerHTML = el['Class Name'];
+            if (el['Teacher'] == null) {
+              trs[1].querySelector("#teacher").innerHTML = '<img src="/static/img/avatar.png" class="wpx_small img-round mgb-10">';
+            }
+            else {
+              trs[1].querySelector("#teacher").innerHTML = el['Teacher'];
+            }
+            jQuery("#schedule-elements").append(trs[1]);
+          })
+        });
+    })
+  </script>
+
   <div id="showcase_studio">
-    
     <div>
       <a class="" href="#"><img src="/static/img/showcases/logo.png"></a>
     </div>
@@ -50,7 +91,6 @@
         </a>
     </div>
 
-
     <div class="table-responsive container col-xxl-8 px-4 py-5">
       <h2 class="display-6">05/30 &ndash; 06/06</h2>
       <p>Weekly schedule for Meditation and Vinyasa Yoga at Palo Alto, CA</p>
@@ -58,57 +98,13 @@
         <thead>
           <tr>
             <th style="width: 20%;"></th>
-            <th style="width: 30%;">&nbsp;</th>
-            <th style="width: 19%;">&nbsp;</th>
-            <th style="width: 26%;"></th>
+          <th style="width: 30%;">&nbsp;</th>
+          <th style="width: 19%;">&nbsp;</th>
+          <th style="width: 26%;"></th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <th scope="row" colspan="4" class="text-start">Monday</th>
-          </tr>
-          <tr>
-            <th scope="row"><span>6:00am &ndash; 7:30am (PDT)</span></th>
-            <td>The Smart Flow Yoga</td>
-            <td><img src="/static/img/avatar.png" class="wpx_small img-round mgb-10"></td>
-            <td class="text-small"><a href="#">Add to Calendar</a></td>
-          </tr>
-          <tr>
-              <th scope="row" colspan="4" class="text-start">Tuesday</th>
-            </tr>
-          <tr>
-              <th scope="row"><span>6:00am &ndash; 7:30am (PDT)</span></th>
-              <td>Vinyasa Krama</td>
-              <td><span>Brenda Robertson</span></td>
-              <td class="text-small"><a href="#">Add to Calendar</a></td>
-          </tr>
-          <tr>
-              <th scope="row" colspan="4" class="text-start">Wednesday</th>
-            </tr>
-          <tr>
-            <th scope="row"><span>6:00am &ndash; 7:30am (PDT)</span></th>
-            <td>Yoga For Better Sleep</td>
-            <td><span>Mildred Reed</span></td>
-            <td class="text-small"><a href="#">Add to Calendar</a></td>
-          </tr>
-          <tr>
-            <th scope="row" colspan="4" class="text-start">Thursday</th>
-          </tr>
-        <tr>
-          <th scope="row"><span>6:00am &ndash; 7:00am (PDT)</span></th>
-          <td>Yoga Flow</td>
-          <td><span>Irma Dow</span></td>
-          <td class="text-small"><a href="#">Add to Calendar</a></td>
-        </tr>
-        <tr>
-          <th scope="row" colspan="4" class="text-start">Friday</th>
-        </tr>
-        <tr>
-            <th scope="row"><span>5:00am &ndash; 6:00am (PDT)</span></th>
-            <td>Self Care Through Ayurveda</td>
-            <td><img src="/static/img/avatar.png" class="wpx_small img-round mgb-10"></td>
-            <td class="text-small"><a href="#">Add to Calendar</a></td>
-        </tr>
+        <tbody id="schedule-elements">
+          &nbsp;
         </tbody>
       </table>
     </div>
@@ -120,8 +116,8 @@
             <img src="/static/img/showcases/icon_about.png" alt="" width="70" height="70" title="About">
           </div>
           <div class="card-body text-center">
-            <h2 class="display-6">About</h2>
-            <p class="card-text showcase-text">Modern yoga consists of a range of techniques including asanas (postures) and meditation derived from some of the philosophies, teachings and practices of the Yoga school, which is one of the six schools of traditional Hindu philosophies, and organised into a wide variety of schools and denominations. We offer weekly Vinyasa Yoga classes and Meditation sessions.</p>
+            <h2 class="display-6" id="title-about">&nbsp;</h2>
+            <p class="card-text showcase-text" id="text-about">&nbsp;</p>
           </div>
         </div>
       </div>
@@ -131,14 +127,26 @@
             <img src="/static/img/showcases/icon_contact.png" alt="" width="70" height="70" title="Contact">
           </div>
           <div class="card-body text-center">
-            <h2 class="display-6">Contacts</h2>
-            <p class="card-text showcase-text">Modern yoga consists of a range of techniques including asanas (postures) and meditation derived from some of the philosophies, teachings and practices of the Yoga school, which is one of the six schools of traditional Hindu philosophies, and organised into a wide variety of schools and denominations. We offer weekly Vinyasa Yoga classes and Meditation sessions.</p>
+            <h2 class="display-6" id="title-contacts">&nbsp;</h2>
+            <p class="card-text showcase-text" id="text-contacts">&nbsp;</p>
           </div>
         </div>
       </div>
   </div>
 </div>
-<br />
+
+<table id="template" style="visibility: hidden;">
+  <tbody>
+    <tr>
+        <th scope="row" colspan="4" class="text-start" id="week-day">Tuesday</th>
+    </tr>
+    <tr>
+        <td id="time"><span>6:00am &ndash; 7:30am (PDT)</span></td>
+        <td id="class-name">Vinyasa Krama</td>
+        <td><span id="teacher">Brenda Robertson</span></td>
+        <td class="text-small"><a href="#">Add to Calendar</a></td>
+    </tr>
+  </tbody>
+</table>
+
 {% endblock %}
-<!-- </body>
-</html> -->

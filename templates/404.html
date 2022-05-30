@@ -14,16 +14,16 @@
 {% endblock %}
 {% block navbar %}
                 {% if session['email'] %}
-                <form class="d-flex" action="/logout">                  
+                <form class="d-flex" action="/logout">
                   <button class="btn btn-outline-success" type="submit">Log Out</button>
-                </form>                
+                </form>
                 {% endif %}
-{% endblock %}                
+{% endblock %}
 
-{% block body %}    
+{% block body %}
     <div class="row text-center mb-5 mt-5">
         <div class="col-lg-8 offset-lg-2">
-            <img src="static/img/404-error.svg" class="filter-green mb-3" width="120" />
+            <img src="/static/img/404-error.svg" class="filter-green mb-3" width="120" />
             <h3 class="display-4">Oh no...404</h3>
             <p class="lead">
                 Well, it's a bummer, it looks like something has gone wrong. Maybe internet is broken or something...

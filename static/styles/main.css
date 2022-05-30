@@ -1,8 +1,3 @@
-body {
-    /* background-color: #EEFFFD; */
-    
-}
-
 body div.content {
     margin-top: 2em;
 }
@@ -11,7 +6,7 @@ body div.content {
     margin-left: auto!important;
 }
 
-#login_form {    
+#login_form {
     margin-top: 30px;
 }
 
@@ -35,7 +30,6 @@ h3.display-6 {
 h6 {
     margin: 8px 0;
 }
-
 
 .badge.badge-info.mr-1.disabled {
     background-color: #F7F7F7;
@@ -85,15 +79,9 @@ a, .nav-link {
 a:hover, .nav-link:hover, .nav-link:focus {
     color: #00B779;
 }
-/* .nav {
-    
-    --bs-link-color: color: #00B779;
-    --bs-nav-link-color: color: #00B779;
-    --bs-nav-link-hover-color: color: #00B779;
-} */
 
 .card-body pre {
-    margin-bottom: 0;    
+    margin-bottom: 0;
 }
 
 .form-control:focus {
@@ -112,7 +100,6 @@ a:hover, .nav-link:hover, .nav-link:focus {
 #myTab {
     margin-top: 25px;
 }
-
 
 .nav-item button.nav-link.active {
     font-weight: bold;
@@ -141,7 +128,6 @@ small.text-muted {
     font-size: 0.8em;
 }
 
-/***********************/
 .accordion {
     margin-bottom: 20px;
 }
@@ -178,28 +164,17 @@ small.text-muted {
     background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255,255,255,1.0)'/></svg>");
 }
 
-
 .card-img-top {
     border-top-left-radius: calc(0.25rem - 1px);
     border-top-right-radius: calc(0.25rem - 1px);
 }
 
-.card-text {
+.schedule-font, .card-text, .text-small {
     font-size: 0.85em;
 }
-
-/* .ember-view {
-    color: #000;
-}
-.ember-view:hover {
-    color: #F1615A;
-} */
-
-.schedule-font {
-    font-size: 0.85em;
-}
-.schedule-font span {
+.schedule-font td.time, .schedule-font td#time {
     font-weight: normal;
+    text-align: left;
 }
 
 .img-round, .img-rel-round {
@@ -212,30 +187,10 @@ small.text-muted {
     margin-bottom: 10px;
 }
 
-.text-small {
-    font-size: 0.85em;
-}
-
-/* Icon when the collapsible content is shown */
-/* .btn:after {
-  font-family: "Glyphicons Halflings";
-  content: "\e114";
-  float: right;
-  margin-left: 15px;
-} */
-/* Icon when the collapsible content is hidden */
-/* .btn.collapsed:after {
-  content: "\e080";
-} */
-
-
 /* SHOWCASE STUDIO */
-
 #showcase_studio {
-    /* background-image: url('static/img/showcases/bg_schedule.png'); */
     background-image: url(/static/img/showcases/bg_schedule.png);
     background-repeat: no-repeat;
-    /* transform: scaleX(-1); */
     border: 1px solid #DEE2E6;
     padding: 20px 20px 0 20px;
 }
@@ -276,4 +231,17 @@ span.showcase-instructors-title {
 
 .py-5 {
     padding-top: 1rem!important;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+textarea.form-control {
+    height: 160px;
 }

@@ -1,7 +1,6 @@
 # Module from Python’s standard library. It contains code related to working with computer’s operating system.
 import os
 import os.path
-from click import get_app_dir
 from flask import Flask, render_template, request, session, redirect, flash, url_for, make_response
 from flask.json import jsonify
 from model import connect_to_db, db
@@ -19,16 +18,16 @@ app = Flask(__name__)
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1" # need this for http://localhost:5000 oAuth
 DEV_CREDENTIALS = os.environ['DEV_CREDENTIALS']
+
 # Scopes controls the set of resources and operations that an access token permits
 SCOPES = [os.environ['SCOPE']]
 app.secret_key = os.environ['FLASK_SESSION_KEY']
 app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True # remove in production (this configuration option makes the Flask interactive debugger)
 
-
 # INDEX
 @app.route('/')
 @app.route('/index')
-def index():    
+def index():
     if 'email' in session:
         return redirect(url_for('dashboard'))
 
@@ -48,7 +47,6 @@ def showcases_map():
 def showcases_studio():
     return render_template('showcase_studio.html')
 
-
 @app.route('/showcases/manage')
 def manage():
     return render_template('showcase_manage.html')
@@ -57,10 +55,10 @@ def manage():
 def showcases_studio_edit_schedule():
     return render_template('showcase_edit_schedule.html')
 
-
 @app.route('/showcases/studio/add')
 def showcase_add_to_schedule():
     return render_template('showcase_add_to_schedule.html')
+
 
 # 404
 @app.errorhandler(404)
@@ -78,11 +76,11 @@ def register_user():
         email = request.form.get("email")
         password = request.form.get("password")
         repeated_password = request.form.get("repeated_password")
-        
+
         if password != repeated_password:
             flash("The password you entered was incorrect")
-            return render_template('signup.html')         
-            
+            return render_template('signup.html')
+
         user = get_user_by_email(email)
         if user:
             flash("Account with that email already exists")
@@ -91,8 +89,7 @@ def register_user():
             user = create_user(email, password, registration_date=datetime.now())
             db.session.add(user)
             db.session.commit()
-            # session["email"] = user.email  
-            flash("Account created! Please log in")            
+            flash("Account created! Please log in")
 
         return redirect(url_for('index'))
 
@@ -112,8 +109,8 @@ def login():
         if not user or user.password != password:
             flash("The email or password you've entered was incorrect")
             return redirect(url_for('login'))
-        else:            
-            session["email"] = user.email            
+        else:
+            session["email"] = user.email
             flash(f"Welcome to the Dashboard, {user.email}!")
             return redirect(url_for('dashboard'))
     return render_template('login.html')
@@ -122,20 +119,22 @@ def login():
 # DASHBOARD/ALL SHEETS
 @app.route('/dashboard')
 def dashboard():
-    if "email" not in session:        
+    if "email" not in session:
         return redirect(url_for('index'))
     email = session['email']
     user = get_user_by_email(email)
     if user is None:
         return redirect(url_for("login"))
+
     api_credentials = user.api_credentials
+
     if api_credentials is None:
         return redirect('/oauth')
-    
+
     sheets = get_sheets_by_user(user.id)
     if sheets is None:
         print("No sheets for this user yet")
-    
+
     return render_template('dashboard.html', sheets=sheets)
 
 
@@ -190,11 +189,6 @@ def sheet_delete_row(google_spreadsheet_id, object_id):
             }
         ],
     }
-
-    # sheet_range = f"{object_id}:{object_id}"
-    # clear_values_request_body = {
-    #     'range': f"{sheet_range}:{sheet_range}",
-    # }
 
     # Deleting rows with the Sheets API v4 is handled by a spreadsheet.batchUpdate method call
     delete_api_request = sheets\
@@ -275,8 +269,6 @@ def sheet_update_row(google_spreadsheet_id, object_id):
         except ValueError:
             pass
 
-    # print(f"==== batch_update_body: {batch_update_body}")
-
     update_api_request = (
         sheets\
             .values()\
@@ -287,7 +279,6 @@ def sheet_update_row(google_spreadsheet_id, object_id):
     )
     update_response = update_api_request.execute()
 
-    # print(f"=== update_response: {update_response}")
     if update_response.get('totalUpdatedRows') == 1:
         updated_data = payload
         updated_data['id'] = object_id
@@ -306,7 +297,6 @@ def sheet_add_row(google_spreadsheet_id):
     # breakpoint()
     # request.json
 
-    
     api_credentials = get_credentials_by_spreadsheet_id(google_spreadsheet_id)
     if api_credentials is None:
         return "ERROR: No credentials", 400
@@ -340,7 +330,7 @@ def sheet_add_row(google_spreadsheet_id):
     columns_info = (
         sheets
             .values()
-            .get(spreadsheetId=google_spreadsheet_id, range="A1:C1")
+            .get(spreadsheetId=google_spreadsheet_id, range="A1:Z1")
             .execute()
     )
 
@@ -358,11 +348,6 @@ def sheet_add_row(google_spreadsheet_id):
     values = []
     for col_name in columns:
         values.append(json_row.get(col_name))
-
-    print(f"\n\n================================================\n\n")
-    print(f"JSON ROW ====> {json_row}")
-    print(f"COLUMNS ====> {columns}")
-    print(f"values =====> {values}")
 
     # values = [
     #     ['Lena', 'CA', 'TRUE']
@@ -382,14 +367,13 @@ def sheet_add_row(google_spreadsheet_id):
                     body=body)
     response = api_request.execute()
 
-    print('===============> {0} cells appended.'.format(response
-                               .get('updates')
-                               .get('updatedCells')))
-    print(f"========> response: {response}")
+    # print('===============> {0} cells appended.'.format(response
+    #                            .get('updates')
+    #                            .get('updatedCells')))
+    # print(f"========> response: {response}")
     # The response will consist of an UpdateValuesResponse object such as this one:
     # response: {'spreadsheetId': '1cs2r_BWDDkMpEnz96RMfjeGIuqEUj_gLM0v0uwqAfSg', 'tableRange': 'Sheet1!A1:C6', 'updates': {'spreadsheetId': '1cs2r_BWDDkMpEnz96RMfjeGIuqEUj_gLM0v0uwqAfSg', 'updatedRange': 'Sheet1!A7:C7', 'updatedRows': 1, 'updatedColumns': 3, 'updatedCells': 3}}
 
-    # return "{}"
     return jsonify(json_row)
 
 
@@ -482,11 +466,12 @@ def new_project():
     user = get_user_by_email(email)
     if user is None:
         return redirect(url_for("login"))
+
     api_credentials = user.api_credentials
-    
+
     if api_credentials is None:
         return redirect('/oauth')
-    
+
     return render_template('new_sheet.html')
 
 
@@ -510,16 +495,15 @@ def create_sheet():
     user = get_user_by_email(email)
     if user is None:
         return redirect(url_for("login"))
-        
+
     api_credentials = user.api_credentials
 
     if api_credentials is None:
         return redirect('/oauth')
-    
+
     google_spreadsheet_id=request.form.get("google_spreadsheet_id")
     sheet_name=request.form.get("sheet_name")
-    
-    # Add data to 'sheets' table
+
     try:
         sheet = create_new_sheet(
             user_id=user.id, 
@@ -546,7 +530,6 @@ def create_sheet():
 
 # DELETE SHEET
 @app.route('/delete_sheet/<sheet_id>', methods=['GET'])
-# @requires_auth
 def delete_sheet(sheet_id):
     if "email" not in session:
         return redirect(url_for("login"))
@@ -559,7 +542,7 @@ def delete_sheet(sheet_id):
         flash("Spreadsheet was successfully deleted")
     except AttributeError as e:
         flash("ERROR")
-    
+
     return redirect(url_for('dashboard'))
 
 
@@ -597,12 +580,12 @@ def auth_flow():
     # The authorization begins when my application redirects a browser to a Google URL
     # The URL includes query parameters that indicate the type of access being requested
     # Google handles the user auth and user consent, the result is an authorization code, which the app can exchange for an access token and a refresh token
-    
+
     # Step 1 - introducing yourself as web developer
     flow = Flow.from_client_secrets_file(DEV_CREDENTIALS, scopes=SCOPES)
 
     # Step 2 = Confirmation of user's consent to trust your app so app will be able to access user's data
-    # If user grants permission, the Google Authorization Server send our app an access token (or an authorization code that your application can use to obtain an access token) and a list of scopes of access granted by that token. 
+    # If user grants permission, the Google Authorization Server send our app an access token (or an authorization code that your application can use to obtain an access token) and a list of scopes of access granted by that token.
     # If user doesn't grant the access -> the server returns an error.
     flow.redirect_uri = "http://localhost:5000/oauth_callback" # for second step
 
@@ -653,10 +636,9 @@ def oauth_callback():
             db.session.add(api_credentials)
             db.session.add(user)
             db.session.commit()
-            # flash("Credentials added to DB") 
+            # flash("Credentials added to DB")
 
     return redirect("/new")
-
 
 # Google Cloud Platform requirement
 @app.route("/privacy_policy")
@@ -671,6 +653,6 @@ def tos():
 
 if __name__ == "__main__":
     # Initializing DB and bind it to the app
-    
+
     connect_to_db(app)
     app.run(host="0.0.0.0", debug=True)
