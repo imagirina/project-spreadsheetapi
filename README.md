@@ -9,7 +9,7 @@
   <h2 align="center">Spreadsheet API</h2>
 
   <p align="center">
-    Hackbright Academy Capstone Project by <a href="https://github.com/imagirina">Iryna Brechko</a>
+    Hackbright Academy Capstone Project by 👤 <a href="https://www.linkedin.com/in/iryna-brechko/">imagirina</a>
     <br />
     <br />
     <a href="#">View Demo (soon)</a>·
@@ -22,7 +22,7 @@
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
-  <ul>
+  <ul style="list-style-type: none;">
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
@@ -50,11 +50,13 @@
 
 _Spreadsheet API_ is a service that allows creators to build products utilizing Google Spreadsheet as a database exposed via REST API. With the help of this service creators can focus on their MVP rather than implementing data model and backend.
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ### Tech Stack
 
 <strong>Backend:</strong> Python, [Flask](https://flask.palletsprojects.com/en/2.1.x/), PostgreSQL, SQLAlchemy, Jinja2<br />
 <strong>Frontend:</strong> JavaScript, AJAX, JSON, [Bootstrap](https://getbootstrap.com), HTML5, CSS3, [JQuery](https://jquery.com)<br/>
-<strong>APIs:</strong> [Google Sheets API](https://developers.google.com/sheets/api/)
+<strong>APIs:</strong> [Google Sheets API](https://developers.google.com/sheets/api/)<br />
 <strong>Libraries:</strong> [Chart.js](https://www.chartjs.org/)
 
 ### Database Model
@@ -98,9 +100,9 @@ $ pip install -r requirements.txt
 Obtain access credentials🔑 from [Google](https://developers.google.com/workspace/guides/create-credentials). Credentials will be used to obtain an access token from Google's authorization servers so the app can call Google Workspace APIs. Save them to a file `secrets.sh`. Your file should look something like this:
 
 ```sh
-export DEV_CREDENTIALS='your_dev_credentials.json'
+export DEV_CREDENTIALS='_'
 export SCOPE="https://www.googleapis.com/auth/spreadsheets"
-export FLASK_SESSION_KEY=b'your_unique_flask_key'
+export FLASK_SESSION_KEY=b'_'
 ```
 
 Create database `spreadsheetapi`:
@@ -113,6 +115,8 @@ Create tables for database:
 
 ```sh
 $ python model.py
+$ python -i model.py
+$ db.create_all()
 ```
 
 Run the app from the command line:
@@ -140,10 +144,6 @@ $ python -i model.py
 ## Usage
 
 Examples of how the project can be used (screenshots, code examples) (soon):
-
-_Reference for more examples will be posted soon [Documentation](#)_
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTACT -->
 
