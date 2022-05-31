@@ -13,7 +13,6 @@
     <br />
     Hackbright Academy Capstone Project by 👤 <a href="https://github.com/imagirina">imagirina</a>
     <br />
-    <br />
     <a href="#">View Demo (soon)</a>·
     <a href="https://github.com/imagirina/project-spreadsheetapi">Project Link</a>
     <br />
@@ -46,13 +45,10 @@
 <br />
 <!-- ABOUT THE PROJECT -->
 
-<br />
-
 ## About The Project
 
-[![Spreadsheet API Screen Shot][product-screenshot]](https://example.com)
-
 _Spreadsheet API_ is a service that allows creators to build products utilizing Google Spreadsheet as a database exposed via REST API. With the help of this service creators can focus on their MVP rather than implementing data model and backend.
+[![Spreadsheet API Screen Shot][product-screenshot]](https://example.com)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
