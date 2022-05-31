@@ -2,6 +2,7 @@
 
 <!-- PROJECT LOGO -->
 <div align="center">
+  <br />
   <a href="#">
     <img src="/static/img/logo.png" alt="Logo" width="80" height="80">
   </a>
@@ -9,7 +10,8 @@
   <h2 align="center">Spreadsheet API</h2>
 
   <p align="center">
-    Hackbright Academy Capstone Project by 👤 <a href="https://www.linkedin.com/in/iryna-brechko/">imagirina</a>
+    <br />
+    Hackbright Academy Capstone Project by 👤 <a href="https://github.com/imagirina">imagirina</a>
     <br />
     <br />
     <a href="#">View Demo (soon)</a>·
@@ -41,8 +43,10 @@
     <li><a href="#contact">Contact</a></li>
   </ul>
 </details>
-
+<br />
 <!-- ABOUT THE PROJECT -->
+
+<br />
 
 ## About The Project
 
@@ -58,6 +62,7 @@ _Spreadsheet API_ is a service that allows creators to build products utilizing 
 <strong>Frontend:</strong> JavaScript, [AJAX](https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX), JSON, [Bootstrap](https://getbootstrap.com), HTML5, CSS3, [JQuery](https://jquery.com)<br/>
 <strong>APIs:</strong> [Google Sheets API](https://developers.google.com/sheets/api/)<br />
 <strong>Libraries:</strong> [Chart.js](https://www.chartjs.org/)
+<br />
 <br />
 
 ### Database Model
