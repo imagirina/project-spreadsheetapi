@@ -42,7 +42,7 @@
     <li><a href="#contact">Contact</a></li>
   </ul>
 </details>
-<br />
+
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
