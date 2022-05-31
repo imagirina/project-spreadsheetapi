@@ -1,29 +1,28 @@
 <div id="top"></div>
 
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
 <!-- PROJECT LOGO -->
 <div align="center">
   <a href="#">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="/static/img/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Spreadsheet API</h3>
+  <h2 align="center">Spreadsheet API</h2>
 
   <p align="center">
-    Hackbright Academy Capstone Project by <a href="https://github.com/imagirina"><strong>Iryna Brechko »</strong></a>
+    Hackbright Academy Capstone Project by <a href="https://github.com/imagirina">Iryna Brechko</a>
     <br />
     <br />
     <a href="#">View Demo (soon)</a>·
     <a href="https://github.com/imagirina/project-spreadsheetapi">Project Link</a>
+    <br />
+    <br />
   </p>
 </div>
 
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
-- [Tech Stack](https://github.com/imagirina/project-spreadsheetapi#tech-stack)
-  <ol>
+  <ul>
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
@@ -40,7 +39,7 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#contact">Contact</a></li>
-  </ol>
+  </ul>
 </details>
 
 <!-- ABOUT THE PROJECT -->
@@ -51,14 +50,12 @@
 
 _Spreadsheet API_ is a service that allows creators to build products utilizing Google Spreadsheet as a database exposed via REST API. With the help of this service creators can focus on their MVP rather than implementing data model and backend.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 ### Tech Stack
 
-Backend: Python, [Flask](https://flask.palletsprojects.com/en/2.1.x/), PostgreSQL, SQLAlchemy, Jinja2<br />
-Frontend: JavaScript, AJAX, JSON, [Bootstrap](https://getbootstrap.com), HTML5, CSS3, [JQuery](https://jquery.com)<br/>
-APIs: [Google Sheets API](https://developers.google.com/sheets/api/)
-Libraries: [Chart.js](https://www.chartjs.org/)
+<strong>Backend:</strong> Python, [Flask](https://flask.palletsprojects.com/en/2.1.x/), PostgreSQL, SQLAlchemy, Jinja2<br />
+<strong>Frontend:</strong> JavaScript, AJAX, JSON, [Bootstrap](https://getbootstrap.com), HTML5, CSS3, [JQuery](https://jquery.com)<br/>
+<strong>APIs:</strong> [Google Sheets API](https://developers.google.com/sheets/api/)
+<strong>Libraries:</strong> [Chart.js](https://www.chartjs.org/)
 
 ### Database Model
 
@@ -76,28 +73,29 @@ To have this app running on your local computer, please follow the steps below:
 
 ### Prerequisites
 
-- Clone the repository:
+Clone the repository:
 
-  ```sh
-  git clone https://github.com/imagirina/project-spreadsheetapi.git
-  ```
+```sh
+git clone https://github.com/imagirina/project-spreadsheetapi.git
+```
 
-- Create and activate virtual environment:
+Create and activate virtual environment:
 
-  ```sh
-  $ virtualenv env
-  $ echo env >> .gitignore
-  $ source env/bin/activate
-  ```
+```sh
+$ virtualenv env
+$ echo env >> .gitignore
+$ source env/bin/activate
+```
 
-- Install dependencies:
-  ```sh
-  $ pip install -r requirements.txt
-  ```
+Install dependencies:
+
+```sh
+$ pip install -r requirements.txt
+```
 
 ### Installation
 
-- Obtain access credentials🔑 from [Google](https://developers.google.com/workspace/guides/create-credentials). Credentials will be used to obtain an access token from Google's authorization servers so the app can call Google Workspace APIs. Save them to a file `secrets.sh`. Your file should look something like this:
+Obtain access credentials🔑 from [Google](https://developers.google.com/workspace/guides/create-credentials). Credentials will be used to obtain an access token from Google's authorization servers so the app can call Google Workspace APIs. Save them to a file `secrets.sh`. Your file should look something like this:
 
 ```sh
 export DEV_CREDENTIALS='your_dev_credentials.json'
@@ -105,31 +103,31 @@ export SCOPE="https://www.googleapis.com/auth/spreadsheets"
 export FLASK_SESSION_KEY=b'your_unique_flask_key'
 ```
 
-- Create database `spreadsheetapi`:
+Create database `spreadsheetapi`:
 
 ```sh
 $ createdb spreadsheetapi
 ```
 
-- Create tables for database:
+Create tables for database:
 
 ```sh
 $ python model.py
 ```
 
-- Run the app from the command line:
+Run the app from the command line:
 
 ```sh
 $ python server.py
 ```
 
-- In your web browser, navigate to:
+In your web browser, navigate to:
 
 ```sh
 localhost:5000
 ```
 
-- If you want to use SQLAlchemy to query the database, run in interactive mode:
+If you want to use SQLAlchemy to query the database, run in interactive mode:
 
 ```sh
 $ python -i model.py
@@ -151,16 +149,15 @@ _Reference for more examples will be posted soon [Documentation](#)_
 
 ## Contact
 
-👤 imagirina - [linkedin-url](https://www.linkedin.com/in/iryna-brechko/)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
+👤 [imagirina](https://www.linkedin.com/in/iryna-brechko/)
 
 ## Show your support
 
 Give a ⭐️ if you found this project helpful.
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 <!-- MARKDOWN LINKS & IMAGES -->
 
-[linkedin-url]: https://www.linkedin.com/in/iryna-brechko/
-[product-screenshot]: images/screenshot.png
-[model-screenshot]: images/screenshot.png
+[product-screenshot]: /static/img/screenshot.png
+[model-screenshot]: /static/img/screenshot.png
