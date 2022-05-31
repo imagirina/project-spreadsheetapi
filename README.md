@@ -54,16 +54,16 @@ _Spreadsheet API_ is a service that allows creators to build products utilizing 
 
 ### Tech Stack
 
-<strong>Backend:</strong> Python, [Flask](https://flask.palletsprojects.com/en/2.1.x/), PostgreSQL, SQLAlchemy, Jinja2<br />
-<strong>Frontend:</strong> JavaScript, AJAX, JSON, [Bootstrap](https://getbootstrap.com), HTML5, CSS3, [JQuery](https://jquery.com)<br/>
+<strong>Backend:</strong> Python, [Flask](https://flask.palletsprojects.com/en/2.1.x/), [PostgreSQL](https://www.postgresql.org/), [SQLAlchemy](https://www.sqlalchemy.org/), [Jinja2](https://jinja.palletsprojects.com/en/3.1.x/)<br />
+<strong>Frontend:</strong> JavaScript, [AJAX](https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX), JSON, [Bootstrap](https://getbootstrap.com), HTML5, CSS3, [JQuery](https://jquery.com)<br/>
 <strong>APIs:</strong> [Google Sheets API](https://developers.google.com/sheets/api/)<br />
 <strong>Libraries:</strong> [Chart.js](https://www.chartjs.org/)
+<br />
 
 ### Database Model
 
-[![Spreadsheet API Model Screen Shot][model-screenshot]](#)
-
 _Spreadsheet API_ is using a PostgreSQL database, with SQLAlchemy as an ORM.
+[![Spreadsheet API Model Screen Shot][model-screenshot]](#)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -128,7 +128,7 @@ $ python server.py
 In your web browser, navigate to:
 
 ```sh
-localhost:5000
+http://localhost:5000/
 ```
 
 If you want to use SQLAlchemy to query the database, run in interactive mode:
