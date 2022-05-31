@@ -48,7 +48,7 @@
 ## About The Project
 
 _Spreadsheet API_ is a service that allows creators to build products utilizing Google Spreadsheet as a database exposed via REST API. With the help of this service creators can focus on their MVP rather than implementing data model and backend.
-[![Spreadsheet API Screen Shot][product-screenshot]](https://example.com)
+[![Spreadsheet API Screen Shot][product-screenshot]](#)
 
 ### Tech Stack
 
