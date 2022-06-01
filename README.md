@@ -165,4 +165,4 @@ Give a ⭐️ if you found this project helpful.
 <!-- MARKDOWN LINKS & IMAGES -->
 
 [product-screenshot]: /static/img/screenshot.png
-[model-screenshot]: /static/img/screenshot.png
+[model-screenshot]: /static/img/data_model.png
