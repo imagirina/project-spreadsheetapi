@@ -9,7 +9,7 @@
             </div>
             <div class="card-body">
                 <form class="row g-3" action="/edit_sheet/{{ sheet.id }}" method="post">
-                    <input type="text" name="sheet_name" class="form-control" value="{{ sheet.sheet_name }}" />
+                    <input type="text" name="sheet_name" class="form-control" value="{{ sheet.sheet_name }}" />&nbsp;
                     <button class="btn btn-primary" type="submit">Save Changes</button>
                 </form>
             </div>
@@ -24,8 +24,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <small>Deleting this project will make its API unavailable immediately. This action cannot be undone.</small>
-                <br /><br />
+                <p>Deleting this project will make its API unavailable immediately. This action cannot be undone.</p>
                 <form class="row g-3" action="/delete_sheet/{{ sheet.id }}">
                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#dangerModal" type="submit">Delete Spreadsheet</button>
                 </form>

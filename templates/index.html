@@ -13,18 +13,114 @@
 </ul>
 {% endblock %}
 {% block navbar %}
-  <!--{% if session['email'] %}-->
                 <form class="d-flex" action="/login">
                   <button class="btn btn-outline-success" type="submit">Log In</button>
                 </form>
-  <!--{% else %}   -->             
-                <form class="d-flex" action="/signup">
-                  <button class="btn btn-outline-success" type="submit">Get Started</button>
-                </form>
-  <!--{% endif %}-->
-
 {% endblock %}
 
 {% block body %}
-    <h3>Welcome</h3>
+
+    <header class="py-20 bg-bg-3">
+			<div class="container">
+				<div class="row justify-content-between flex-column-reverse flex-lg-row">
+					<div class="col-lg-6 mt-8 mt-lg-0">
+						<h1 class="display-3 aos-init aos-animate" data-aos="fade-down" data-aos-delay="0">
+							Web Apps from Google Spreadsheets 
+						</h1>
+						<p class="mb-8 fs-1 mt-4 aos-init aos-animate" data-aos="fade-down" data-aos-delay="250">
+							Service offers APIs to work with your spreadsheets as a database, meaning you can get data in and out of your spreadsheet using simple HTTP requests and URLs.
+						</p>
+            <form class="d-flex" action="/signup">
+              <button class="btn btn-get-started aos-init aos-animate" type="submit" data-aos="fade-down" data-aos-delay="500">Get Started</button>
+            </form>
+						<p class="fs-5 mt-8 aos-init aos-animate" data-aos="fade-down" data-aos-delay="750">
+						</p>
+					</div>
+					<div class="col-lg-6 col-xl-auto">
+						<img src="/static/img/showcase_map.png" srcset="/static/img/showcase_map.png 2x" alt="" class="img-fluid aos-init aos-animate" data-aos="fade-down" data-aos-delay="250">
+					</div>
+				</div>
+			</div>
+		</header>
+
+
+    <section class="py-10 py-lg-20 bg-bg-3 text-center">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-9 col-xl-8 col-xxl-6">
+            <h2 class="display-5 mb-6 aos-init aos-animate" data-aos="fade-down" data-aos-delay="0">
+              Restful JSON API Examples
+            </h2>
+            <p class="mb-8 fs-1 mt-4 aos-init aos-animate" data-aos="fade-down" data-aos-delay="250">
+							With just a few clicks you can have a full JSON API up and running
+						</p>
+          </div>
+        </div>
+        <div class="row flex-column-reverse flex-sm-row justify-content-center align-items-center">
+          <div class="mb-sm-0 mb-15 col-8 col-sm-6 col-md-7 col-lg-5 col-xl-5 col-xxl-4 text-md-end aos-init aos-animate" data-aos="fade-down" data-aos-delay="0">
+            <img src="/static/img/showcase_json.png" srcset="/static/img/showcase_json.png 2x" alt="" class="img-fluid centering">
+          </div>
+          <div class="col-9 col-sm-6 col-md-5 col-lg-4 col-xl-3 text-sm-start">
+            <div class="mb-12 aos-init aos-animate" data-aos="fade-down" data-aos-delay="250">
+              <h5 class="mb-4">
+                [GET]
+              </h5>
+              <p class="mb-0">
+That’s a brilliant idea you’ve got. Build it, and they will come. 
+              </p>
+            </div>
+            <div class="mb-12 aos-init aos-animate" data-aos="fade-down" data-aos-delay="500">
+              <h5 class="mb-4">
+                [POST]
+              </h5>
+              <p class="mb-0">
+The website builder to help you grow - free from bugs and errors.
+              </p>
+            </div>
+            <div class="mb-12 aos-init aos-animate" data-aos="fade-down" data-aos-delay="750">
+              <h5 class="mb-4">
+                [PUT]
+              </h5>
+              <p class="mb-0">
+Want to create something beautiful? Now you can. In hours, not weeks. 
+              </p>
+            </div>
+            <div data-aos="fade-down" data-aos-delay="1000" class="aos-init aos-animate">
+              <h5 class="mb-4">
+                [DELETE]
+              </h5>
+              <p class="mb-0">
+Get your idea out there in the way you want it. Start with Startup.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock %}
+
+{% block showcases %}
+  <section class="section" id="projects-wrap">
+    <div class="container">
+      <div class="overlay"></div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="section-heading">
+                    <h1 class="text-white">Showcases with prebuilt templates using real data from spreadsheet</h1>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <p class="lead text-white">Combine Sheety with your next prototype to create a fully interactive experience that can retrieve and update live data, all with just a few lines of code. No complicated backend required.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <a href="#">Back to top</a>
+  </div>
+</footer>
+
 {% endblock %}

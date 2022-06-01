@@ -104,6 +104,12 @@ export SCOPE="https://www.googleapis.com/auth/spreadsheets"
 export FLASK_SESSION_KEY=b'_'
 ```
 
+Add `secrets.sh` to your virtual environment:
+
+```sh
+$ source secrets.sh
+```
+
 Create database `spreadsheetapi`:
 
 ```sh

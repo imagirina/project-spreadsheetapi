@@ -3,9 +3,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
 
-
+# Creating an instance of SQLAlchemy
+# db object represents spreadsheetapi DB (through this object we will be able to use SQLAlchemy methods like .commit() etc.)
 db = SQLAlchemy()
-
 class User(db.Model):
     """ User """
 
@@ -13,6 +13,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     
+    # Establish relationship between classes
     api_credentials_id = db.Column(db.Integer, db.ForeignKey('api_credentials.id'))
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
@@ -100,18 +101,19 @@ def init_app():
 
 def connect_to_db(flask_app, echo=True):
     """Connect the database to our Flask app."""
-    
+
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///spreadsheetapi'
-    flask_app.config['SQLALCHEMY_ECHO'] = echo
+    flask_app.config['SQLALCHEMY_ECHO'] = echo # True by default (enable output of the raw SQL executed by SQLAlchemy)
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    # Connect DB with the Flask app
     db.app = flask_app
     db.init_app(flask_app)
-    
 
 
 if __name__ == "__main__":
     from server import app
-    
-    # init_app()
+
+    # To prevent SQLAlchemy from printing every query it executes into STDOUT,
+    # call connect_to_db(flask_app, echo=False)
     connect_to_db(app)
