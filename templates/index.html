@@ -7,9 +7,6 @@
   <li class="nav-item">
     <a class="nav-link" href="/showcases">Showcases</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#">Documentation</a>
-  </li>
 </ul>
 {% endblock %}
 {% block navbar %}
@@ -28,7 +25,9 @@
 							Web Apps from Google Spreadsheets 
 						</h1>
 						<p class="mb-8 fs-1 mt-4 aos-init aos-animate" data-aos="fade-down" data-aos-delay="250">
-							Service offers APIs to work with your spreadsheets as a database, meaning you can get data in and out of your spreadsheet using simple HTTP requests and URLs.
+							<!-- Service offers APIs to work with your spreadsheets as a database, meaning you can get data in and out of your spreadsheet using simple HTTP requests and URLs. -->
+              <!-- Turning your Google Spreadsheet into the database accessible via REST API is easy as 1-2-3! -->
+              Prototype your ideas without a hassle of building a backend. Use your Google Spreadsheet as your database accessible via REST API.
 						</p>
             <form class="d-flex" action="/signup">
               <button class="btn btn-get-started aos-init aos-animate" type="submit" data-aos="fade-down" data-aos-delay="500">Get Started</button>
@@ -49,10 +48,10 @@
         <div class="row justify-content-center">
           <div class="col-lg-9 col-xl-8 col-xxl-6">
             <h2 class="display-5 mb-6 aos-init aos-animate" data-aos="fade-down" data-aos-delay="0">
-              Restful JSON API Examples
+              RESTful JSON API
             </h2>
             <p class="mb-8 fs-1 mt-4 aos-init aos-animate" data-aos="fade-down" data-aos-delay="250">
-							With just a few clicks you can have a full JSON API up and running
+							With just a few clicks you can have an API up and running
 						</p>
           </div>
         </div>
@@ -66,7 +65,7 @@
                 [GET]
               </h5>
               <p class="mb-0">
-That’s a brilliant idea you’ve got. Build it, and they will come. 
+                Reads all rows and returns as array of JSON objects.
               </p>
             </div>
             <div class="mb-12 aos-init aos-animate" data-aos="fade-down" data-aos-delay="500">
@@ -74,7 +73,7 @@ That’s a brilliant idea you’ve got. Build it, and they will come.
                 [POST]
               </h5>
               <p class="mb-0">
-The website builder to help you grow - free from bugs and errors.
+                Add new row to your spreadsheet.
               </p>
             </div>
             <div class="mb-12 aos-init aos-animate" data-aos="fade-down" data-aos-delay="750">
@@ -82,7 +81,7 @@ The website builder to help you grow - free from bugs and errors.
                 [PUT]
               </h5>
               <p class="mb-0">
-Want to create something beautiful? Now you can. In hours, not weeks. 
+                Update one of the existing rows.
               </p>
             </div>
             <div data-aos="fade-down" data-aos-delay="1000" class="aos-init aos-animate">
@@ -90,7 +89,7 @@ Want to create something beautiful? Now you can. In hours, not weeks.
                 [DELETE]
               </h5>
               <p class="mb-0">
-Get your idea out there in the way you want it. Start with Startup.
+                Delete rows with ease.
               </p>
             </div>
           </div>
@@ -106,11 +105,14 @@ Get your idea out there in the way you want it. Start with Startup.
         <div class="row">
             <div class="col-lg-6">
                 <div class="section-heading">
-                    <h1 class="text-white">Showcases with prebuilt templates using real data from spreadsheet</h1>
+                  <h1 class="text-white">Endless possibilities.<br />Explore our <a href="/showcases">Showcases</a>!</h1>
+                    <!-- <h1 class="text-white">Showcases with prebuilt templates using real data from spreadsheet</h1> -->
                 </div>
             </div>
             <div class="col-lg-6">
-                <p class="lead text-white">Combine Sheety with your next prototype to create a fully interactive experience that can retrieve and update live data, all with just a few lines of code. No complicated backend required.</p>
+                <p class="lead text-white">
+                  Bring your prototype to life with just a few clicks and few lines of code. No backend, just Spreadsheet API!
+                </p>
             </div>
         </div>
     </div>

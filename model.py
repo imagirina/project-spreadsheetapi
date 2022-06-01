@@ -48,7 +48,7 @@ class Sheet(db.Model):
     put_action_enabled = db.Column(db.Boolean, nullable=False)
     delete_action_enabled = db.Column(db.Boolean, nullable=False)
 
-    user = db.relationship("User", backref="sheets")    
+    user = db.relationship("User", backref="sheets")
 
     """Debugging-friendly representation"""
     def __repr__(self):
