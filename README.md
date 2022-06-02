@@ -49,12 +49,12 @@
 
 _Spreadsheet API_ is a service that allows creators to build products utilizing Google Spreadsheet as a database exposed via REST API. With the help of this service creators can focus on their MVP rather than implementing data model and backend.
 [![Spreadsheet API Screen Shot][product-screenshot]](#)
-<br />
+<br /><br />
 
 ### Tech Stack
 
-<strong>Backend:</strong> Python, [Flask](https://flask.palletsprojects.com/en/2.1.x/), [PostgreSQL](https://www.postgresql.org/), [SQLAlchemy](https://www.sqlalchemy.org/), [Jinja2](https://jinja.palletsprojects.com/en/3.1.x/)<br />
-<strong>Frontend:</strong> JavaScript, [AJAX](https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX), JSON, [Bootstrap](https://getbootstrap.com), HTML5, CSS3, [JQuery](https://jquery.com)<br/>
+<strong>Backend:</strong> Python, [Flask](https://flask.palletsprojects.com/en/2.1.x/), [PostgreSQL](https://www.postgresql.org/), [SQLAlchemy](https://www.sqlalchemy.org/)<br />
+<strong>Frontend:</strong> JavaScript, [AJAX](https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX), JSON, [Jinja2](https://jinja.palletsprojects.com/en/3.1.x/), [Bootstrap](https://getbootstrap.com), HTML5, CSS3, [JQuery](https://jquery.com)<br/>
 <strong>APIs:</strong> [Google Sheets API](https://developers.google.com/sheets/api/)<br />
 <strong>Libraries:</strong> [Chart.js](https://www.chartjs.org/)
 <br />
