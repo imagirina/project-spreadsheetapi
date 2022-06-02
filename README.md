@@ -3,11 +3,11 @@
 <!-- PROJECT LOGO -->
 <div align="center">
   <br />
-  <a href="#">
+  <!--<a href="#">
     <img src="/static/img/logo.png" alt="Logo" width="80" height="80">
-  </a>
+  </a>-->
 
-  <h2 align="center">Spreadsheet API</h2>
+  <h1 align="center">Spreadsheet API</h1>
 
   <p align="center">
     <br />
@@ -49,6 +49,7 @@
 
 _Spreadsheet API_ is a service that allows creators to build products utilizing Google Spreadsheet as a database exposed via REST API. With the help of this service creators can focus on their MVP rather than implementing data model and backend.
 [![Spreadsheet API Screen Shot][product-screenshot]](#)
+<br />
 
 ### Tech Stack
 
