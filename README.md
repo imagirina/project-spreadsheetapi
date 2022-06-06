@@ -2,11 +2,9 @@
 
 <!-- PROJECT LOGO -->
 <div align="center">
-  <br />
   <!--<a href="#">
     <img src="/static/img/logo.png" alt="Logo" width="80" height="80">
   </a>-->
-
   <h1 align="center">Spreadsheet API</h1>
 
   <p align="center">
@@ -56,7 +54,7 @@ _Spreadsheet API_ is a service that allows creators to build products utilizing 
 <strong>Backend:</strong> Python, [Flask](https://flask.palletsprojects.com/en/2.1.x/), [PostgreSQL](https://www.postgresql.org/), [SQLAlchemy](https://www.sqlalchemy.org/)<br />
 <strong>Frontend:</strong> JavaScript, [AJAX](https://developer.mozilla.org/en-US/docs/Web/Guide/AJAX), JSON, [Jinja2](https://jinja.palletsprojects.com/en/3.1.x/), [Bootstrap](https://getbootstrap.com), HTML5, CSS3, [JQuery](https://jquery.com)<br/>
 <strong>APIs:</strong> [Google Sheets API](https://developers.google.com/sheets/api/)<br />
-<strong>Libraries:</strong> [Chart.js](https://www.chartjs.org/)
+<strong>Libraries:</strong> [Chart.js GEO](https://github.com/sgratzl/chartjs-chart-geo)
 <br />
 <br />
 
