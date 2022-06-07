@@ -7,9 +7,10 @@
   <li class="nav-item">
     <a class="nav-link" href="/showcases">Showcases</a>
   </li>
+  <!--
   <li class="nav-item">
     <a class="nav-link" href="/dashboard">Dashboard</a>
-  </li>
+  </li>-->
 </ul>
 {% endblock %}
 {% block navbar %}
@@ -32,7 +33,7 @@
         <div class="card mt-3">
           <div class="card-body text-center">
             <a href="/sheets/{{ sheet.id }}" class="stretched-link ember-view">
-              <h6>{{ sheet.sheet_name }}</h6>
+              <h5>{{ sheet.sheet_name }}</h5>
             </a>
           </div>
         </div>

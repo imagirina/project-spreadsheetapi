@@ -119,8 +119,8 @@ def update_sheet_name(sheet_id, sheet_name):
 def delete_sheet_by_id(sheet_id):
     """Delete sheet by sheet id"""
 
-    Sheet.query.where(Sheet.id == sheet_id).delete()
     SheetStats.query.where(SheetStats.sheet_id == sheet_id).delete()
+    Sheet.query.where(Sheet.id == sheet_id).delete()    
 
     # Sheet.delete().where(Sheet.id == sheet_id)
     # SheetStats.delete().where(SheetStats.sheet_id == sheet_id)

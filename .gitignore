@@ -5,3 +5,4 @@ __pycache__
 *secret.*
 secrets.sh
 dev_credentials.json
+tmp/

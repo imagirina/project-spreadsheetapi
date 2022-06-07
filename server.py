@@ -501,8 +501,13 @@ def create_sheet():
     if api_credentials is None:
         return redirect('/oauth')
 
-    google_spreadsheet_id=request.form.get("google_spreadsheet_id")
-    sheet_name=request.form.get("sheet_name")
+    if request.method == 'POST':
+        google_spreadsheet_id=request.form.get("google_spreadsheet_id")
+        sheet_name=request.form.get("sheet_name")
+
+        if not google_spreadsheet_id or not sheet_name:
+            flash(f"Please fill all fields")
+            return render_template('new_sheet.html')
 
     try:
         sheet = create_new_sheet(

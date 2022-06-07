@@ -12,15 +12,36 @@ body div.content {
     margin-left: auto !important;
 }
 
+
+/* .row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1*var(--bs-gutter-y));
+    margin-right: calc(-0.5*var(--bs-gutter-x));
+    margin-left: calc(-0.5*var(--bs-gutter-x));
+}
+
+.row>* {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x)*.5);
+    padding-left: calc(var(--bs-gutter-x)*.5);
+    margin-top: var(--bs-gutter-y)
+} */
+
 #login_form {
     margin-top: 30px;
+    /* max-width: 540px; */
 }
 
 #flashed_messages {
     background-color: lightgoldenrodyellow;
     text-align: center;
     padding: 8px 0;
-    font-size: 0.85em;
+    /* font-size: 0.85em; */
 }
 
 .sticky-top {
@@ -36,7 +57,7 @@ body div.content {
 
 .navbar-brand {
     font-weight: 500;
-    font-size: 1.4em;
+    font-size: 1.8em;
 }
 
 .navbar>.container-fluid {
@@ -47,13 +68,13 @@ body div.content {
     /* color: #27282a; */
     color: #20c998;
     font-weight: 500;
-    font-size: 1.2em;
+    font-size: 1.3em;
 }
 
 a {
     color: #20c998;
     font-weight: 500;
-    /* font-size: 1.2em; */
+    font-size: 1.3em;
 }
 
 a:hover,
@@ -69,8 +90,13 @@ h3.display-6 {
     line-height: 1.2;
 }
 
+h5 {
+    font-size: 1.1em;
+}
+
 h6 {
     margin: 8px 0;
+    font-size: 1.1em;
 }
 
 .badge.badge-info.mr-1.disabled {
@@ -96,11 +122,11 @@ h6 {
 }
 
 .badge {
-    font-size: 0.85em;
+    font-size: 0.95em;
 }
 
 .btn {
-    font-size: 1.2em;
+    font-size: 1.4em;
 }
 
 .btn-primary,
@@ -202,7 +228,7 @@ small.text-muted {
     min-height: 1rem;
     padding-left: 1.5rem;
     margin-left: auto !important;
-    font-size: 0.85em;
+    font-size: 1.1em;
 }
 
 .form-switch .form-check-input:focus {
@@ -363,26 +389,6 @@ header {
 }
 
 
-
-.row {
-    --bs-gutter-x: 1.5rem;
-    --bs-gutter-y: 0;
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: calc(-1*var(--bs-gutter-y));
-    margin-right: calc(-0.5*var(--bs-gutter-x));
-    margin-left: calc(-0.5*var(--bs-gutter-x));
-}
-
-.row>* {
-    flex-shrink: 0;
-    width: 100%;
-    max-width: 100%;
-    padding-right: calc(var(--bs-gutter-x)*.5);
-    padding-left: calc(var(--bs-gutter-x)*.5);
-    margin-top: var(--bs-gutter-y)
-}
-
 *,
 *::before,
 *::after {
@@ -495,7 +501,6 @@ h1 {
     flex: 0 0 auto;
     /* width: 66.66666667%; */
     width: 50%;
-    /* border: 1px solid green; */
 }
 
 .centering {
@@ -615,7 +620,7 @@ body {
 
 
 #projects-wrap h1 {
-    font-size: 2.125rem;
+    font-size: 1.85rem;
     font-family: 'Muli', sans-serif;
     font-weight: 500;
     line-height: 1.35em;
@@ -646,7 +651,7 @@ section {
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, .85);
+    background: rgba(0, 0, 0, .90);
 }
 
 #projects-wrap .container {
